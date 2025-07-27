@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink} from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -22,10 +22,13 @@ const SidebarWrapper = styled(motion.nav)`
   padding: ${({ theme }) => theme.spacing.lg};
   display: flex;
   flex-direction: column;
-
   position: relative; /* ไม่ fix */
-  height: 100%; /* เต็มความสูงพ่อแม่ */
+  height: 100%;
   box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto; /* เผื่อเนื้อหามากกว่า viewport */
 `;
 
 const LogoSection = styled(motion.div)<{ $collapsed: boolean }>`
@@ -185,7 +188,6 @@ export const Sidebar: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   const menuItems = [
-    { path: '/', label: t('nav.home'), icon: Home },
     { path: '/solution-1', label: t('nav.solution1'), icon: Layers },
     { path: '/solution-2', label: t('nav.solution2'), icon: Package },
     { path: '/solution-3', label: t('nav.solution3'), icon: Box },

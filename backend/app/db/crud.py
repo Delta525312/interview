@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.db.models import URL
+from backend.app.db.url_models import URL
 import string
 import random
 

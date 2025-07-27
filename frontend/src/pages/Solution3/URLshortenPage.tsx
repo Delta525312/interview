@@ -1,34 +1,15 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getStyles } from 'components/solution3/styles';
+import { type ShortenedURL, type ManagedURL, type AuditLog} from '../../components/solution3/types';
 import { Link, Copy, Zap, Shield, Globe, Sparkles, CheckCircle, AlertCircle, TrendingUp, Clock, ExternalLink, Edit, Trash2, BookOpen, Save, XCircle, Search } from 'lucide-react';
 import { Rnd } from 'react-rnd';
 import Swal from 'sweetalert2';
 import { useTheme } from '../../contexts/ThemeContext'; 
 // --- Interfaces & Constants ---
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-interface ShortenedURL {
-    shortUrl: string;
-    originalUrl: string;
-    timestamp: Date;
-}
-interface ManagedURL {
-    id: string;
-    short_key: string;
-    original_url: string;
-    created_by: string;
-    clicks?: number;
-}
-interface AuditLog {
-    id: string;
-    action: string;
-    performed_at: Date;
-    performed_by: string;
-}
 
-const theme: any = 'light';
-
-export const Solution3: React.FC = () => {
+export const URLshortenPage: React.FC = () => {
     // --- HOOKS ---
     const { themeMode } = useTheme();
     const { t } = useTranslation();
@@ -42,6 +23,15 @@ export const Solution3: React.FC = () => {
     const [displayName, setDisplayName] = useState(() => localStorage.getItem('name') || '');
     const [isEditingName, setIsEditingName] = useState(false);
 
+    // Redirect to auth if no accessToken or name
+    useEffect(() => {
+      const token = localStorage.getItem('accessToken');
+      const name = localStorage.getItem('name');
+      if (!token || !name) {
+        setShowAuth(true);
+      }
+    }, []);
+
     // --- STATE MANAGEMENT ---
     const [token, setToken] = useState<string | null>(() => localStorage.getItem('accessToken'));
     const [nameInput, setNameInput] = useState<string>('');
@@ -52,6 +42,23 @@ export const Solution3: React.FC = () => {
     const [isCopied, setIsCopied] = useState<string>('');
     const [recentUrls, setRecentUrls] = useState<ShortenedURL[]>([]);
     const [managedUrls, setManagedUrls] = useState<ManagedURL[]>([]);
+    const [urlOrder, setUrlOrder] = useState<'timestamp' | 'mostclick'>('timestamp');
+    // Helper: sort managedUrls according to urlOrder
+    const getSortedManagedUrls = useCallback(() => {
+        let arr = [...managedUrls];
+        if (urlOrder === 'timestamp') {
+            // No timestamp in ManagedURL, so sort by id (assuming id is monotonic, or fallback to original order)
+            arr.sort((a, b) => {
+                // If id is a UUID, fallback to original order (no sort)
+                // If id is numeric or sortable, sort descending
+                // Otherwise, do nothing
+                return 0;
+            });
+        } else if (urlOrder === 'mostclick') {
+            arr.sort((a, b) => (b.clicks ?? 0) - (a.clicks ?? 0));
+        }
+        return arr;
+    }, [managedUrls, urlOrder]);
     const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
     const [isHovering, setIsHovering] = useState<string>('');
     const [activeTab, setActiveTab] = useState<'manage' | 'log'>('manage');
@@ -96,7 +103,7 @@ const handleNameSubmit = async (e?: React.FormEvent) => {
     const response = await fetch(`${API_BASE_URL}/api/v1/token`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: nameToSubmit.trim() })
+      body: JSON.stringify({ keyword: nameToSubmit.trim() })
     });
     const data = await handleApiResponse(response);
     if (data.access_token) {
@@ -253,7 +260,8 @@ const handleDeleteUrl = async (id: string) => {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
-    fetchManagedUrls();
+    // Remove from managedUrls immediately
+    setManagedUrls(prev => prev.filter(u => u.id !== id));
 
     await Swal.fire({
       icon: 'success',
@@ -312,6 +320,14 @@ const handleCopy = async (text: string, id: string) => {
       await fetch(`${API_BASE_URL}/api/v1/urlshorten/id/${id}/click`, {
         method: 'PATCH',
         headers: getAuthHeaders(),
+      });
+      // Update managedUrls state immediately (optimistic update) and re-sort if needed
+      setManagedUrls(prev => {
+        const updated = prev.map(u => u.id === id ? { ...u, clicks: (u.clicks ?? 0) + 1 } : u);
+        if (urlOrder === 'mostclick') {
+          return [...updated].sort((a, b) => (b.clicks ?? 0) - (a.clicks ?? 0));
+        }
+        return updated;
       });
     } catch (err) {
       // ไม่ต้องแจ้ง error ถ้า update click fail
@@ -603,7 +619,14 @@ const handleCopy = async (text: string, id: string) => {
                             <div style={styles.tabContent}>
                                 {activeTab === 'manage' && (
                                     <div>
-                                        {managedUrls.map(url => (
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                                            <label htmlFor="urlOrder" style={{ fontWeight: 500 }}>{t('management.orderBy', 'Order by')}:</label>
+                                            <select id="urlOrder" value={urlOrder} onChange={e => setUrlOrder(e.target.value as 'timestamp' | 'mostclick')} style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid #ccc', fontSize: 15 }}>
+                                                <option value="timestamp">{t('management.timestamp', 'Latest')}</option>
+                                                <option value="mostclick">{t('management.mostclick', 'Most Clicks')}</option>
+                                            </select>
+                                        </div>
+                                        {getSortedManagedUrls().map(url => (
                                             <div key={url.id} style={styles.listItem}>
                                                 {editingUrlId === url.id ? (
                                                     <div style={styles.listItemContent}>
@@ -707,4 +730,4 @@ const handleCopy = async (text: string, id: string) => {
     );
 }
 
-export default Solution3;
+export default URLshortenPage;

@@ -1,8 +1,8 @@
 
-import { Play, Pause, RefreshCw, GitBranch, FileText, AlertTriangle, PlusCircle, Trash2, SlidersHorizontal, Keyboard } from 'lucide-react';
+import { Play, Pause, RefreshCw, GitBranch, FileText, AlertTriangle, PlusCircle, Trash2, SlidersHorizontal, Keyboard, HelpCircle } from 'lucide-react';
+import { Rnd } from 'react-rnd';
 import React, { useState, useEffect, useContext } from 'react';
 import { TreeNode, InputMode,LogEntry } from './types';
-
 const BuilderLockContext = React.createContext<{isSimulating: boolean, isPaused: boolean}>({isSimulating: false, isPaused: false});
 const parseAndValidateInput = (input: string, t: Function) => {
     const parts = input.split(',');
@@ -60,8 +60,8 @@ const deepCloneTree = (node: TreeNode, parent: TreeNode | null = null): TreeNode
     return newNode;
 };
 
-interface TreeBuilderProps { node: TreeNode; onUpdate: (node: TreeNode) => void; }
-const TreeBuilderNode: React.FC<TreeBuilderProps> = ({ node, onUpdate }) => {
+interface TreeBuilderProps { node: TreeNode; onUpdate: (node: TreeNode) => void; path?: string[]; }
+const TreeBuilderNode: React.FC<TreeBuilderProps> = ({ node, onUpdate, path = [] }) => {
     // Helper: get depth
     const getDepth = (n: TreeNode, d = 1): number => n.parent ? getDepth(n.parent, d + 1) : d;
     // ห้ามแก้ไขขณะเล่น
@@ -75,6 +75,7 @@ const TreeBuilderNode: React.FC<TreeBuilderProps> = ({ node, onUpdate }) => {
     const addChild = () => {
         if (locked) return;
         if (getDepth(node) >= 5) return;
+        if (node.children.length >= 4) return; // Limit to 4 children
         let newChildId = String.fromCharCode('A'.charCodeAt(0) + Math.floor(Math.random() * 26));
         // ห้ามสร้างลูกที่ id เป็น 'A'
         while (newChildId === 'A') {
@@ -83,19 +84,43 @@ const TreeBuilderNode: React.FC<TreeBuilderProps> = ({ node, onUpdate }) => {
         const newChild: TreeNode = { id: newChildId, children: [], parent: node, capacity: node.capacity, walnutsStored: 0, uid: crypto.randomUUID() };
         onUpdate({ ...node, children: [...node.children, newChild] });
     };
+    // Recursively update a child node in the tree
+    const updateChild = (tree: TreeNode, childUid: string, updatedChild: TreeNode): TreeNode => {
+        if (tree.uid === childUid) return updatedChild;
+        return { ...tree, children: tree.children.map(c => updateChild(c, childUid, updatedChild)) };
+    };
     const handleChildUpdate = (updatedChild: TreeNode) => {
         if (locked) return;
-        onUpdate({ ...node, children: node.children.map(c => c.uid === updatedChild.uid ? updatedChild : c) });
+        onUpdate(updateChild(node, updatedChild.uid, updatedChild));
     };
+    // Remove a child node by uid
     const removeThisNode = () => {
         if (locked) return;
+        if (!node.parent) return; // don't remove root
+        // propagate up: parent must remove this node from its children
+        const removeChild = (tree: TreeNode, childUid: string): TreeNode => {
+            return { ...tree, children: tree.children.filter(c => c.uid !== childUid).map(c => removeChild(c, childUid)) };
+        };
         if (node.parent) {
-            const parent = node.parent;
-            const newChildren = parent.children.filter(c => c.uid !== node.uid);
-            onUpdate({ ...parent, children: newChildren });
+            onUpdate(removeChild(node.parent, node.uid));
         }
     };
-    return (<div className="builder-node"><div className="builder-node-self"><input type="text" value={node.id} onChange={handleIdChange} className="builder-node-input" disabled={locked} /><button onClick={addChild} className="builder-node-btn add" title="Add child" disabled={locked || getDepth(node) >= 5}><PlusCircle size={16} /></button>{node.parent && <button onClick={removeThisNode} className="builder-node-btn remove" title="Remove node" disabled={locked}><Trash2 size={16} /></button>}</div>{node.children.length > 0 && <div className="builder-node-children">{node.children.map(child => <TreeBuilderNode key={child.uid} node={child} onUpdate={handleChildUpdate} />)}</div>}</div>);
+    return (
+      <div className="builder-node">
+        <div className="builder-node-self">
+          <input type="text" value={node.id} onChange={handleIdChange} className="builder-node-input" disabled={locked} />
+          <button onClick={addChild} className="builder-node-btn add" title="Add child" disabled={locked || getDepth(node) >= 5 || node.children.length >= 4}><PlusCircle size={16} /></button>
+          {node.parent && <button onClick={removeThisNode} className="builder-node-btn remove" title="Remove node" disabled={locked}><Trash2 size={16} /></button>}
+        </div>
+        {node.children.length > 0 && (
+          <div className="builder-node-children">
+            {node.children.map(child => (
+              <TreeBuilderNode key={child.uid} node={child} onUpdate={handleChildUpdate} />
+            ))}
+          </div>
+        )}
+      </div>
+    );
 };
 
 interface ControlsPanelProps { onUpdateInput: (walnuts: number, capacity: number, tree: TreeNode) => void; onStartPauseResume: () => void; onReset: () => void; isSimulating: boolean; isPaused: boolean; error: string | null; t: Function; initialValues: {walnuts: number, capacity: number, tree: TreeNode | null}; addLog: (msg: string, type?: "info" | "error" | "success") => void; }
@@ -107,6 +132,9 @@ const ControlsPanel: React.FC<ControlsPanelProps> = ({ onUpdateInput, onStartPau
     const [rawInput, setRawInput] = useState("25,3,ABEG)H)))COHGB)))))DFIK)L))JM))))");
     const { isSimulating: lockedSim, isPaused: lockedPaused } = useContext(BuilderLockContext);
     const locked = lockedSim || lockedPaused;
+
+    // Help modal state
+    const [showHelp, setShowHelp] = useState(false);
 
     useEffect(() => {
         setWalnuts(initialValues.walnuts);
@@ -174,9 +202,100 @@ const ControlsPanel: React.FC<ControlsPanelProps> = ({ onUpdateInput, onStartPau
         setCapacity(val);
         setBuilderTree(prev => updateTreeCapacity(prev, val));
     };
+
+    // Theme-aware help modal content with X button
+  const theme = localStorage.getItem('theme') || 'light';
+
+const isDark = theme === 'dark';
+
+const helpContent = (
+    <div
+        style={{
+            width: '100%',
+            height: '100%',
+            background: isDark ? '#1f1f1f' : '#fff',
+            color: isDark ? '#f5f5f5' : '#222',
+            borderRadius: 12,
+            boxSizing: 'border-box',
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative',
+            padding: 0
+        }}
+    >
+        <div
+            className="help-modal-header"
+            style={{
+                width: '100%',
+                minHeight: 40,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0 16px',
+                borderTopLeftRadius: 12,
+                borderTopRightRadius: 12,
+                background: isDark ? '#1f1f1f' : '#fff',
+                borderBottom: `1px solid ${isDark ? '#333' : '#e0e0e0'}`,
+                cursor: 'move',
+                userSelect: 'none',
+            }}
+        >
+            <span style={{ fontWeight: 600, fontSize: 18 }}>
+                {t('squirrel.help.title', 'คู่มือการสร้างโครงสร้างต้นไม้กระรอก')}
+            </span>
+            <button
+                onClick={() => setShowHelp(false)}
+                title={t('squirrel.help.close', 'ปิดคู่มือ')}
+                style={{
+                    background: 'none',
+                    border: 'none',
+                    color: isDark ? '#f5f5f5' : '#222',
+                    fontSize: 20,
+                    cursor: 'pointer',
+                    padding: 0,
+                    marginLeft: 8,
+                    lineHeight: 1,
+                    borderRadius: 4,
+                    width: 32,
+                    height: 32,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'background 0.2s',
+                }}
+                onMouseOver={e => (e.currentTarget.style.background = isDark ? '#444' : '#e0e0e0')}
+                onMouseOut={e => (e.currentTarget.style.background = 'none')}
+            >
+                <span style={{ fontWeight: 700, fontSize: 22 }}>&times;</span>
+            </button>
+        </div>
+
+        <div style={{ flex: 1, overflowY: 'auto', padding: 20 }}>
+            <ul style={{ paddingLeft: 20, margin: 0 }}>
+                <li>{t('squirrel.help.maxWalnut', 'แต่ละโหนดเก็บ walnut ได้ไม่เกิน 5 ลูก')}</li>
+                <li>{t('squirrel.help.maxChildren', 'แต่ละโหนดมีลูกได้ไม่เกิน 4 โหนด')}</li>
+                <li>{t('squirrel.help.maxDepth', 'ความลึกของต้นไม้ไม่เกิน 5 ชั้น (root นับเป็นชั้นที่ 1)')}</li>
+                <li>{t('squirrel.help.idRule', 'id ของแต่ละโหนดต้องเป็นตัวอักษรภาษาอังกฤษ A-Z (root ห้ามเป็น A)')}</li>
+                <li>{t('squirrel.help.capacityRule', 'capacity (ความจุ) ของแต่ละโหนดต้องอยู่ระหว่าง 1 ถึง 5')}</li>
+                <li>{t('squirrel.help.walnutRule', 'จำนวน walnut ทั้งหมดต้องไม่เกิน nodeCount x 5')}</li>
+                <li>{t('squirrel.help.legacyInput', 'โครงสร้างแบบ raw ต้องใช้รูปแบบ: จำนวนwalnut,capacity,โครงสร้าง เช่น 25,3,ABEG)H)))')}</li>
+            </ul>
+            <p style={{ fontSize: 13, color: isDark ? '#aaa' : '#888', marginTop: 16 }}>
+                {t('squirrel.help.note', 'หมายเหตุ: หากข้อมูลไม่ถูกต้องจะไม่สามารถเริ่ม simulation ได้')}
+            </p>
+        </div>
+    </div>
+);
+
+
     return (
         <div className="panel">
-            <h3 className="section-header"><GitBranch size={16} /> {t('squirrel.controls.title')}</h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h3 className="section-header"><GitBranch size={16} /> {t('squirrel.controls.title')}</h3>
+                <button onClick={() => setShowHelp(true)} title={t('squirrel.help.open', 'เปิดคู่มือ')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color, #4a90e2)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <HelpCircle size={20} /> {t('squirrel.help.button', 'คู่มือ')}
+                </button>
+            </div>
             <div className="mode-selector">
                 <button onClick={() => !locked && setMode('builder')} className={mode === 'builder' ? 'active' : ''} disabled={locked}><SlidersHorizontal size={14}/> {t('squirrel.controls.mode.builder')}</button>
                 <button onClick={() => !locked && setMode('raw')} className={mode === 'raw' ? 'active' : ''} disabled={locked}><Keyboard size={14}/> {t('squirrel.controls.mode.raw')}</button>
@@ -193,6 +312,30 @@ const ControlsPanel: React.FC<ControlsPanelProps> = ({ onUpdateInput, onStartPau
                 <button className="control-button reset" onClick={onReset}><RefreshCw size={18} /> {t('squirrel.controls.reset')}</button>
             </div>
             {error && <div className="error-box"><AlertTriangle size={20} /> <span>{error}</span></div>}
+
+            {/* Help Modal */}
+            {showHelp && (
+                <Rnd
+                    default={{ x: 100, y: 100, width: 440, height: 380 }}
+                    minWidth={320}
+                    minHeight={220}
+                    bounds="window"
+                    style={{ zIndex: 1000, background: 'transparent', borderRadius: 12, boxShadow: '0 4px 24px rgba(0,0,0,0.18)' }}
+                    dragHandleClassName="help-modal-header"
+                    enableResizing={{
+                        top: true,
+                        right: true,
+                        bottom: true,
+                        left: true,
+                        topRight: true,
+                        bottomRight: true,
+                        bottomLeft: true,
+                        topLeft: true,
+                    }}
+                >
+                    {helpContent}
+                </Rnd>
+            )}
         </div>
     );
 }

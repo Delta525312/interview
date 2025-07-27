@@ -165,15 +165,15 @@ export const TreeVisualization: React.FC<TreeVisualizationProps> = ({ tree, squi
         // Add root walnut counter
         const rootNode = treeData.descendants().find((d: any) => d.data.id === 'A');
         if (rootNode) {
-            g.append("rect")
-                .attr("x", rootNode.x - 40)
-                .attr("y", rootNode.y + 45)
-                .attr("width", 80)
-                .attr("height", 25)
-                .attr("rx", 12)
-                .style("fill", "rgba(255,255,255,0.9)")
-                .style("stroke", "#8B4513")
-                .style("stroke-width", 2);
+           g.append("rect")
+  .attr("x", rootNode.x - 60)             // ขยับตำแหน่งให้อยู่ตรงกลาง
+  .attr("y", rootNode.y + 40)
+  .attr("width", 120)                     // เดิมคือ 80
+  .attr("height", 35)                     // เดิมคือ 25
+  .attr("rx", 16)                         // เพิ่มความโค้ง
+  .style("fill", "rgba(255,255,255,0.9)")
+  .style("stroke", "#8B4513")
+  .style("stroke-width", 2);
             
            g.append("text")
     .attr("x", rootNode.x)

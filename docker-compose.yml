@@ -12,6 +12,7 @@ services:
       - ./backend:/app
     depends_on:
       - db
+      - minio   # เพิ่ม minio ขึ้นกับ backend
 
   frontend:
     build: ./frontend
@@ -20,6 +21,7 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app
+      - /app/node_modules 
     depends_on:
       - backend
 
@@ -45,5 +47,20 @@ services:
     depends_on:
       - db
 
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"       # MinIO API port
+      - "9001:9001"       # MinIO Console (เว็บจัดการ)
+    environment:
+      MINIO_ROOT_USER: minioadmin    # ตั้งค่า Access Key (เปลี่ยนได้ตามต้องการ)
+      MINIO_ROOT_PASSWORD: minioadmin # ตั้งค่า Secret Key (เปลี่ยนได้ตามต้องการ)
+      MINIO_SERVER_URL: http://localhost:9000
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+
 volumes:
   pgdata:
+  minio_data:

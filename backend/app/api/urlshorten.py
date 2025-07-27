@@ -6,7 +6,7 @@ from fastapi.responses import RedirectResponse
 from app.api.auth import oauth2_scheme
 from app.core.security import decode_access_token
 from app.db.database import SessionLocal
-from app.db.models import URLShorten, URLShortenAudit
+from app.db.url_models import URLShorten, URLShortenAudit
 from app.schemas.urlshorten import URLShortenCreate, URLShortenUpdate, URLShortenResponse,URLShortenAuditResponse
 import string
 from fastapi import Response
@@ -73,7 +73,7 @@ async def get_audit_logs(db: Session = Depends(get_db)):
 
 @router.get("/", response_model=List[URLShortenResponse])
 async def get_all_urls(db: Session = Depends(get_db)):
-    return db.query(URLShorten).all()
+    return db.query(URLShorten).order_by(URLShorten.created_at.desc()).all()
 
 
 @router.get("/id/{url_id}", response_model=URLShortenResponse)

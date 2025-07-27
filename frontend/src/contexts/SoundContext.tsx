@@ -1,5 +1,4 @@
-// src/contexts/soundcontext.tsx
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 
 interface SoundContextType {
   isMuted: boolean;
@@ -19,11 +18,15 @@ export const SoundProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     localStorage.setItem('soundMuted', isMuted.toString());
   }, [isMuted]);
 
-  const toggleMute = () => {
-    setIsMuted(!isMuted);
-  };
+const toggleMute = () => {
+  setIsMuted(prev => {
+    const newValue = !prev;
+    console.log('🔁 toggleMute -> isMuted:', newValue);
+    return newValue;
+  });
+};
 
-  const playSound = (type: 'click' | 'hover' | 'success' | 'error') => {
+  const playSound = useCallback((type: 'click' | 'hover' | 'success' | 'error') => {
     if (isMuted) return;
 
     const soundMap: Record<string, string> = {
@@ -38,7 +41,7 @@ export const SoundProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     audio.play().catch((err) => {
       console.warn(`Cannot play sound (${type}):`, err);
     });
-  };
+  }, [isMuted]); // 🧠 ผูกกับ isMuted
 
   return (
     <SoundContext.Provider value={{ isMuted, toggleMute, playSound }}>
@@ -54,3 +57,5 @@ export const useSound = () => {
   }
   return context;
 };
+
+export default SoundProvider;

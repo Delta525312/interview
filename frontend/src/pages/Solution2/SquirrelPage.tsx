@@ -7,6 +7,7 @@ import '../../components/solution2/squirrel-styles.css';
 import { TreeVisualization } from '../../components/solution2/tree-display';
 import { useTheme } from '../../contexts/ThemeContext';
 import { ControlsPanel, ActivityLog } from '../../components/solution2/control-panel';
+
 const BuilderLockContext = React.createContext<{isSimulating: boolean, isPaused: boolean}>({isSimulating: false, isPaused: false});
 const parseAndValidateInput = (input: string, t: Function) => {
     const parts = input.split(',');
