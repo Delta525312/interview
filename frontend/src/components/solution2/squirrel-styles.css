@@ -1,0 +1,334 @@
+:root {
+    --bg-color: #f0f2f5;
+    --panel-bg: white;
+    --text-color: #1f2937;
+    --header-color: #4b5563;
+    --border-color: #e5e7eb;
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --primary-disabled: #a5b4fc;
+    --reset-bg: #e5e7eb;
+    --reset-hover: #d1d5db;
+    --reset-text: #374151;
+    --error-bg: #fff1f2;
+    --error-border: #ffdde0;
+    --error-text: #be123c;
+    --success-color: #16a34a;
+    --branch-color: #8d6e63;
+    --leaf-bg: #22c55e;
+    --leaf-border: #16a34a;
+    --root-bg: #a16207;
+    --root-border: #713f12;
+    --highlight-color: #facc15;
+}
+
+[data-theme='dark'] {
+    --bg-color: #111827;
+    --panel-bg: #1f2937;
+    --text-color: #d1d5db;
+    --header-color: #9ca3af;
+    --border-color: #374151;
+    --primary-color: #6366f1;
+    --primary-hover: #818cf8;
+    --primary-disabled: #4f46e5;
+    --reset-bg: #374151;
+    --reset-hover: #4b5563;
+    --reset-text: #d1d5db;
+    --error-bg: #4c1d23;
+    --error-border: #7f1d1d;
+    --error-text: #fda4af;
+    --success-color: #4ade80;
+    --branch-color: #a16207;
+    --leaf-bg: #166534;
+    --leaf-border: #15803d;
+    --root-bg: #78350f;
+    --root-border: #451a03;
+    --highlight-color: #fde047;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.page-container {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 24px;
+    min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr 350px;
+    gap: 24px;
+    max-width: 1600px;
+    margin: auto;
+    width: 100%;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.panel {
+    background-color: var(--panel-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: background-color 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.section-header {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--header-color);
+    margin-top: 0;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+    flex-shrink: 0;
+}
+
+.mode-selector {
+    display: flex;
+    background-color: var(--bg-color);
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 16px;
+    flex-shrink: 0;
+}
+
+.mode-selector button {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    background-color: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--header-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.mode-selector button.active {
+    background-color: var(--panel-bg);
+    color: var(--primary-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.builder-ui {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.builder-ui .builder-field {
+    margin-bottom: 16px;
+}
+
+.builder-ui label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 6px;
+}
+
+.builder-ui input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+    color: var(--text-color);
+    box-sizing: border-box;
+}
+
+.builder-tree-container {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 12px;
+    flex-grow: 1;
+    overflow: auto;
+}
+
+.builder-node {
+    padding-left: 20px;
+}
+
+.builder-node-self {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+}
+
+.builder-node-input {
+    width: 40px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    padding: 4px;
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+.builder-node-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+}
+
+.builder-node-btn.add:hover {
+    background-color: #d1fae5;
+}
+
+.builder-node-btn.remove:hover {
+    background-color: #fee2e2;
+}
+
+.builder-node-children {
+    border-left: 2px dashed var(--border-color);
+    margin-left: 10px;
+}
+
+.input-textarea {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+    color: var(--text-color);
+    border-radius: 8px;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 14px;
+    resize: vertical;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    flex-shrink: 0;
+}
+
+.control-button {
+    flex-grow: 1;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.control-button.play {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.control-button.play:hover {
+    background-color: var(--primary-hover);
+}
+
+.control-button.play:disabled {
+    background-color: var(--primary-disabled);
+    cursor: not-allowed;
+}
+
+.control-button.reset {
+    background-color: var(--reset-bg);
+    color: var(--reset-text);
+}
+
+.control-button.reset:hover {
+    background-color: var(--reset-hover);
+}
+
+.error-box {
+    margin-top: 16px;
+    padding: 12px;
+    background-color: var(--error-bg);
+    border: 1px solid var(--error-border);
+    color: var(--error-text);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/* Tree Visualization Panel */
+/* Tree Visualization Panel */
+.viz-panel {
+    min-height: 0;
+    max-height: 1600px;
+
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.viz-panel .section-header {
+    flex-shrink: 0;
+    padding: 16px;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.tree-canvas {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+}
+
+/* Custom scrollbar */
+.tree-canvas::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.tree-canvas::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+}
+
+.tree-canvas::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+.tree-canvas::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.tree-canvas::-webkit-scrollbar-corner {
+    background: transparent;
+}

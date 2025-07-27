@@ -1,0 +1,162 @@
+{
+  "nav": {
+    "home": "首页",
+    "solution1": "1.Turtle Problem",
+    "solution2": "2.Squirrel Problem",
+    "solution3": "解决方案 3",
+    "solution4": "解决方案 4",
+    "solution5": "解决方案 5"
+  },
+  "swal": {
+    "successTitle": "成功",
+    "errorTitle": "错误",
+    "oopsTitle": "哎呀...",
+    "authSuccess": "认证成功！",
+    "shortenedSuccessTitle": "已缩短！",
+    "shortenedSuccessText": "网址已成功缩短。",
+    "updatedSuccessTitle": "已更新！",
+    "updatedSuccessText": "网址已成功更新。",
+    "deletedSuccessTitle": "已删除！",
+    "deletedSuccessText": "您的链接已被删除。",
+    "lookupSuccessTitle": "查找成功",
+    "lookupSuccessText": "已找到网址。",
+    "lookupFailedTitle": "查找失败",
+    "copiedSuccess": "已复制到剪贴板",
+    "deleteConfirm": {
+      "title": "您确定吗？",
+      "text": "此操作将无法撤销！",
+      "confirmButton": "是的，删除它！",
+      "cancelButton": "取消"
+    }
+  },
+  "header": {
+    "title": "网址缩短器",
+    "subtitle": "创建美观、安全且易于使用的短链接。"
+  },
+  "form": {
+    "namePlaceholder": "输入您的姓名或令牌...",
+    "urlPlaceholder": "在此处粘贴要缩短的网址...",
+    "button": "缩短链接",
+    "buttonLoading": "正在缩短...",
+    "placeholder": "在此输入内容.."
+  },
+  "success": {
+    "title": "链接创建成功！"
+  },
+  "buttons": {
+    "copy": "复制",
+    "copied": "已复制！"
+  },
+  "features": {
+    "fast": {
+      "title": "简单快捷",
+      "desc": "只需粘贴网址并单击即可。"
+    },
+    "secure": {
+      "title": "安全",
+      "desc": "自动扫描恶意链接。"
+    },
+    "stats": {
+      "title": "实时分析",
+      "desc": "即时跟踪点击次数。"
+    }
+  },
+  "history": {
+    "title": "最近的链接",
+    "clear": "清除历史记录"
+  },
+  "errors": {
+    "nameRequired": "请输入您的姓名或令牌。",
+    "urlRequired": "请输入要缩短的网址。",
+    "invalidUrl": "网址格式无效。请输入以 http:// 或 https:// 开头的网址。",
+    "serverError": "无法连接到服务器。",
+    "copyFailed": "复制链接失败。"
+  },
+  "theme": {
+    "light": "浅色",
+    "dark": "深色"
+  },
+  "language": {
+    "en": "英语",
+    "th": "泰语",
+    "zh": "中文"
+  },
+  "search": {
+    "placeholder": "搜索解决方案..."
+  },
+  "sound": {
+    "on": "开启声音",
+    "off": "关闭声音"
+  },
+  "walks": {
+    "title": "选择行走方式",
+    "zigzag": "1.1 之字形行走",
+    "spiral": "1.2 螺旋行走",
+    "findPath": "1.3 寻找路径 "
+  },
+  "controls": {
+    "title": "控制",
+    "play": "播放",
+    "pause": "暂停",
+    "reset": "重置"
+  },
+  "input": {
+    "input": "输入"
+  },
+  "log": {
+    "header": "活动日志",
+    "clear": "清除",
+    "start": "🚀 开始：{{walkType}}",
+    "step": "移动到 [{{row}},{{col}}]，值 = {{value}}",
+    "end": "✅ 行走完成",
+    "pause": "⏸️ 暂停",
+    "resume": "▶️ 继续",
+    "reset": "🔄 重置",
+    "notFound": "⚠️ 未找到路径",
+    "cleared": "日志已清除",
+    "stopped": "🛑 用户停止了动画。",
+    "foundRoutes": "🔍 找到 {{count}} 条路径。请选择一条开始。"
+  },
+  "pageTitle": "海龟路径算法可视化器",
+  "squirrel": {
+    "error": {
+      "invalidFormat": "无效的输入格式",
+      "invalidWalnut": "无效的核桃数量",
+      "invalidCapacity": "无效的洞容量",
+      "invalidTreeStruct": "树结构不能为空",
+      "impossibleTree": "不可能的树结构",
+      "invalidCharacterInTree": "树中存在无效字符：{char}"
+    },
+    "log": {
+      "reset": "系统已重置。",
+      "complete": "模拟完成。",
+      "storeWalnut": "行程：{trip}",
+      "start": "开始模拟，核桃数量为 {walnuts}，每个洞容量为 {capacity}。",
+      "noWalnutsStored": "没有核桃被储存。",
+      "title": "活动日志",
+      "success": "成功开始",
+      "prefix": "开始模拟，使用",
+      "middle": "个核桃，每个洞容量为",
+      "clear": "清除"
+    },
+    "controls": {
+      "title": "松鼠控制",
+      "mode": {
+        "builder": "UI 构建器",
+        "raw": "原始输入"
+      },
+      "walnuts": "核桃总数",
+      "capacity": "每个洞容量",
+      "treeStructure": "树结构",
+      "start": "开始模拟",
+      "pause": "暂停",
+      "resume": "继续",
+      "reset": "重置"
+    },
+    "display": {
+      "title": "树结构可视化",
+      "placeholder": "树将显示在这里"
+    },
+    "collected": "已收集"
+  }
+}

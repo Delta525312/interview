@@ -1,0 +1,163 @@
+{
+  "header": {
+    "title": "URL Shortener",
+    "subtitle": "Create beautiful, secure, and easy-to-use short links."
+  },
+  "swal": {
+    "successTitle": "Success",
+    "errorTitle": "Error",
+    "oopsTitle": "Oops...",
+    "authSuccess": "Authentication successful!",
+    "shortenedSuccessTitle": "Shortened!",
+    "shortenedSuccessText": "URL shortened successfully.",
+    "updatedSuccessTitle": "Updated!",
+    "updatedSuccessText": "URL updated successfully.",
+    "deletedSuccessTitle": "Deleted!",
+    "deletedSuccessText": "Your link has been deleted.",
+    "lookupSuccessTitle": "Lookup Success",
+    "lookupSuccessText": "URL found.",
+    "lookupFailedTitle": "Lookup Failed",
+    "copiedSuccess": "Copied to clipboard",
+    "deleteConfirm": {
+      "title": "Are you sure?",
+      "text": "You won't be able to revert this!",
+      "confirmButton": "Yes, delete it!",
+      "cancelButton": "Cancel"
+    }
+  },
+  "form": {
+    "namePlaceholder": "Enter your name or token...",
+    "urlPlaceholder": "Paste the URL to shorten here...",
+    "button": "Shorten Link",
+    "buttonLoading": "Shortening...",
+    "placeholder": "Enter your URL here.."
+  },
+  "success": {
+    "title": "Link created successfully!"
+  },
+  "buttons": {
+    "copy": "Copy",
+    "copied": "Copied!"
+  },
+  "features": {
+    "fast": {
+      "title": "Easy and Fast",
+      "desc": "Just paste the URL and click."
+    },
+    "secure": {
+      "title": "Secure",
+      "desc": "Automatic scanning for malicious links."
+    },
+    "stats": {
+      "title": "Real-time Analytics",
+      "desc": "Track click counts instantly."
+    }
+  },
+  "history": {
+    "title": "Recent Links",
+    "clear": "Clear History"
+  },
+  "errors": {
+    "nameRequired": "Please enter your name or token.",
+    "urlRequired": "Please enter the URL to shorten.",
+    "invalidUrl": "Invalid URL format. Please enter a URL starting with http:// or https://",
+    "serverError": "Could not connect to the server.",
+    "copyFailed": "Failed to copy link."
+  },
+  "nav": {
+    "home": "Home",
+    "solution1": "1.Turtle Problem",
+    "solution2": "2.Squirrel Problem",
+    "solution3": "Solution 3",
+    "solution4": "Solution 4",
+    "solution5": "Solution 5"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "language": {
+    "en": "English",
+    "th": "ไทย"
+  },
+  "search": {
+    "placeholder": "Search solutions..."
+  },
+  "sound": {
+    "on": "Sound On",
+    "off": "Sound Off"
+  },
+  "walks": {
+    "title": "Select Walk Type",
+    "zigzag": "1.1 Zig-Zag Walk",
+    "spiral": "1.2 Spiral Walk",
+    "findPath": "1.3 Find Path "
+  },
+  "controls": {
+    "title": "Controls",
+    "input": "Input",
+    "routeoption": "Route Options",
+    "play": "Play",
+    "pause": "Pause",
+    "reset": "Reset"
+  },
+  "input": {
+    "input": "Input"
+  },
+  "log": {
+    "header": "Activity Log",
+    "clear": "Clear",
+    "start": "🚀 Start: {{walkType}}",
+    "step": "Move to [{{row}},{{col}}], Value = {{value}}",
+    "end": "✅ Walk Complete",
+    "pause": "⏸️ Paused",
+    "resume": "▶️ Resumed",
+    "reset": "🔄 Reset",
+    "notFound": "⚠️ Path Not Found",
+    "cleared": "Log Cleared",
+    "stopped": "🛑 Animation stopped by user.",
+    "foundRoutes": "🔍 Found {{count}} routes. Select a route to start."
+  },
+  "pageTitle": "Turtle Path Algorithm Visualizer",
+  "squirrel": {
+    "error": {
+      "invalidFormat": "Invalid Input Format",
+      "invalidWalnut": "Invalid walnut count",
+      "invalidCapacity": "Invalid hole capacity",
+      "invalidTreeStruct": "Tree structure cannot be empty",
+      "impossibleTree": "Impossible tree structure",
+      "invalidCharacterInTree": "Invalid character in tree: {char}"
+    },
+    "log": {
+      "reset": "System reset.",
+      "complete": "Simulation complete.",
+      "storeWalnut": "Trip: {trip}",
+      "start": "Simulation started with {walnuts} walnuts and capacity of {capacity}.",
+      "noWalnutsStored": "No walnuts were stored.",
+      "title": "Activity Log",
+      "prefix": "Simulation started with",
+      "middle": "walnuts and capacity per hole is",
+      "success": "successfully",
+      "clear": "Clear"
+    },
+    "controls": {
+      "title": "Squirrel Controls",
+      "mode": {
+        "builder": "UI Builder",
+        "raw": "Raw Input"
+      },
+      "walnuts": "Total Walnuts",
+      "capacity": "Capacity per Hole",
+      "treeStructure": "Tree Structure",
+      "start": "Start Simulation",
+      "pause": "Pause",
+      "resume": "Resume",
+      "reset": "Reset"
+    },
+    "display": {
+      "title": "Tree Visualization",
+      "placeholder": "Tree will be displayed here"
+    },
+    "collected": "Collected"
+  }
+}
