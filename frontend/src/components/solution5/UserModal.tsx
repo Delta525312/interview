@@ -67,18 +67,107 @@ export const UserModal: React.FC<UserModalProps> = ({
     .modal-action-btn:active { opacity: 0.9; }
   `;
 
+  // Add dark theme style for modal inputs
+  const modalDarkStyle = themeMode === 'dark' ? `
+    .solution5-modal input,
+    .solution5-modal select,
+    .solution5-modal textarea {
+      background: #1e293b !important;
+      color: #f1f5f9 !important;
+      border: 1px solid #334155 !important;
+      box-shadow: none !important;
+    }
+    .solution5-modal input:disabled,
+    .solution5-modal select:disabled,
+    .solution5-modal textarea:disabled {
+      background: #232b3b !important;
+      color: #94a3b8 !important;
+    }
+    .solution5-modal label {
+      color: #f1f5f9 !important;
+    }
+    .solution5-modal .modal-action-btn.cancel {
+      background: #232b3b !important;
+      color: #f1f5f9 !important;
+      border: 1px solid #334155 !important;
+    }
+    .solution5-modal .modal-action-btn.submit {
+      background: #2563eb !important;
+      color: #fff !important;
+    }
+    .solution5-modal {
+      background: rgba(15,23,42,0.98) !important;
+      backdrop-filter: blur(2px) !important;
+    }
+    .solution5-modal .modal-header {
+      background: #232b3b !important;
+      color: #fff !important;
+      border-bottom: 1px solid #334155 !important;
+    }
+    .solution5-modal .modal-header .modal-title {
+      color: #fff !important;
+    }
+  ` : '';
+
   return (
     <>
-      <style>{modalActionBtnStyle}</style>
-      <Modal onClick={() => setShowModal(false)} style={{ background: 'rgba(0,0,0,0.25)' }}>
+      <style>{modalActionBtnStyle + modalDarkStyle}</style>
+      <Modal className="solution5-modal" onClick={() => setShowModal(false)} style={{ background: 'rgba(0,0,0,0.45)' }}>
         <ModalContent onClick={(e) => e.stopPropagation()} style={{ background: bg, color: textColor, border: `1px solid ${borderColor}` }}>
-          <ModalHeader style={{ background: bg, color: textColor, borderBottom: `1px solid ${borderColor}` }}>
-            <ModalTitle>
+          <ModalHeader
+            className="modal-header"
+            style={{
+              ...(themeMode === 'dark'
+                ? { background: '#232b3b', color: '#fff', borderBottom: '1px solid #334155' }
+                : { background: bg, color: textColor, borderBottom: `1px solid ${borderColor}` }),
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              minHeight: 56,
+              padding: '0 20px',
+              boxSizing: 'border-box',
+            }}
+          >
+            <ModalTitle
+              className="modal-title"
+              style={{
+                ...(themeMode === 'dark' ? { color: '#fff' } : {}),
+                fontSize: 20,
+                fontWeight: 600,
+                lineHeight: 1.2,
+                margin: 0,
+                padding: 0,
+              }}
+            >
               {modalMode === 'create' && t('userpage.createUser')}
               {modalMode === 'edit' && t('userpage.editUser')}
               {modalMode === 'view' && t('userpage.viewUser')}
             </ModalTitle>
-            <CloseButton onClick={() => setShowModal(false)}><X size={20} /></CloseButton>
+            <CloseButton
+              onClick={() => setShowModal(false)}
+              style={{
+                marginLeft: 16,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 40,
+                height: 40,
+                borderRadius: '50%',
+                background: themeMode === 'dark' ? '#232b3b' : '#f3f4f6',
+                border: '1px solid ' + (themeMode === 'dark' ? '#334155' : '#d1d5db'),
+                cursor: 'pointer',
+                transition: 'background 0.15s, box-shadow 0.15s',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.background = themeMode === 'dark' ? '#334155' : '#e5e7eb';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.background = themeMode === 'dark' ? '#232b3b' : '#f3f4f6';
+              }}
+            >
+              <X size={24} color={themeMode === 'dark' ? '#fff' : '#232b3b'} />
+            </CloseButton>
           </ModalHeader>
           <ModalBody style={{ background: bg, color: textColor }}>
             <Form onSubmit={handleSubmit}>
@@ -303,19 +392,46 @@ export const UserModal: React.FC<UserModalProps> = ({
               </FormSection>
             </Form>
           </ModalBody>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderTop: `1px solid ${borderColor}`, padding: '12px 20px', marginTop: 16, background: theme.colors.surfaceHover }}>
-            <div style={{ fontSize: 13, color: theme.colors.text.secondary, whiteSpace: 'nowrap' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderTop: `1px solid ${borderColor}`,
+              padding: '16px 28px',
+              background: theme.colors.surfaceHover,
+              minHeight: 70,
+              marginTop: 0,
+              boxSizing: 'border-box',
+            }}
+          >
+            <div style={{ fontSize: 12, color: theme.colors.text.secondary, whiteSpace: 'nowrap', minHeight: 24 }}>
               {modalMode !== 'create' && (
-                <div style={{ display: 'flex', gap: 40, alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
                   <span>Created At: {formatDateTime(userForMeta.created_at)}</span>
                   <span>Last Updated: {formatDateTime(userForMeta.updated_at)}</span>
                 </div>
               )}
             </div>
-            <ButtonGroup style={{ background: bg, borderRadius: 8 }}>
-              <CancelButton type="button" onClick={() => setShowModal(false)} className="modal-action-btn cancel">{t('userpage.cancel')}</CancelButton>
-              {modalMode === 'create' && <SubmitButton type="submit" onClick={handleSubmit} className="modal-action-btn submit">{t('userpage.create')}</SubmitButton>}
-              {modalMode === 'edit' && <SubmitButton type="submit" onClick={handleSubmit} className="modal-action-btn submit">{t('userpage.update')}</SubmitButton>}
+            <ButtonGroup style={{ background: 'none', borderRadius: 16, padding: 0, minHeight: 0 }}>
+              <CancelButton
+                type="button"
+                onClick={() => setShowModal(false)}
+                className="modal-action-btn cancel"
+                style={{ backgroundColor: 'transparent', minHeight: 36, padding: '8px 20px' }}
+              >
+                {t('userpage.cancel')}
+              </CancelButton>
+              {modalMode === 'create' && (
+                <SubmitButton
+                  type="submit"
+                  onClick={handleSubmit}
+                  className="modal-action-btn submit"
+                  style={{ backgroundColor: '#8b5cf6', minHeight: 36, padding: '8px 20px' }}
+                >
+                  {t('userpage.create')}
+                </SubmitButton>
+              )}
             </ButtonGroup>
           </div>
         </ModalContent>

@@ -873,8 +873,7 @@ export const ButtonGroup = styled.div`
   gap: 12px;
   justify-content: flex-end;
   padding: 24px 32px;
-  background-color: #f9fafb;
-  border-top: 1px solid #e5e7eb;
+ 
 `;
 
 export const SubmitButton = styled.button`
