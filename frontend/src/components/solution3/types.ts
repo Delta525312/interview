@@ -15,4 +15,5 @@ export interface AuditLog {
     action: string;
     performed_at: Date;
     performed_by: string;
+    short_key?: string; // Optional, may not be present in all logs
 }

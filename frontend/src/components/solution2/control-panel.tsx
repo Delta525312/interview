@@ -46,12 +46,7 @@ const serializeTreeToLegacy = (node: TreeNode): string => {
     return s + (node.parent ? ')' : '');
 };
 
-const getPathForNode = (node: TreeNode): string => {
-    let path = '';
-    let current: TreeNode | null = node;
-    while (current) { path = current.id + path; current = current.parent; }
-    return path;
-};
+
 
 
 const deepCloneTree = (node: TreeNode, parent: TreeNode | null = null): TreeNode => {

@@ -11,10 +11,11 @@ CREATE TABLE url_shorten (
 
 CREATE TABLE url_shorten_audit (
     id SERIAL PRIMARY KEY,
-    url_id INTEGER REFERENCES url_shorten(id) ON DELETE CASCADE,
+    -- url_id INTEGER REFERENCES url_shorten(id) ON DELETE CASCADE,
     action VARCHAR(10) NOT NULL,            -- เช่น "CREATE", "UPDATE", "DELETE"
     performed_by VARCHAR(255),              -- มาจาก token
-    performed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    performed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    short_key VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS users (

@@ -30,6 +30,6 @@ class URLShortenAuditResponse(BaseModel):
     action: str
     performed_by: str
     performed_at: datetime
-
+    short_key: Optional[str] = None  # short_key may not be present in all logs
     class Config:
         orm_mode = True

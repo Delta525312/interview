@@ -19,3 +19,4 @@ class URLShortenAudit(Base):
     action = Column(String, nullable=False)  # เช่น "CREATE", "UPDATE", "DELETE"
     performed_by = Column(String, nullable=False)
     performed_at = Column(DateTime(timezone=False), server_default=func.now())  # เปลี่ยน timezone=True -> False
+    short_key = Column(String(20), nullable=True) 

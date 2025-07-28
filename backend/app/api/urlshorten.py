@@ -31,11 +31,12 @@ def generate_short_key(length=8):
     chars = string.ascii_letters + string.digits
     return ''.join(random.choice(chars) for _ in range(length))
 
-def log_audit(db: Session, action: str, user: str):
+def log_audit(db: Session, action: str, user: str, short_key: str = None):
     audit = URLShortenAudit(
         action=action,
         performed_by=user,
-        performed_at=datetime.utcnow()
+        performed_at=datetime.utcnow(),
+        short_key=short_key  # บันทึก short_key ด้วย
     )
     db.add(audit)
     db.commit()
@@ -62,9 +63,10 @@ async def create_url(
     db.commit()
     db.refresh(new_url)
 
-    log_audit(db, "CREATE", user)
+    log_audit(db, "CREATE", user, short_key=key)  # ส่ง short_key ด้วย
 
     return new_url
+
 
 @router.get("/audit", response_model=List[URLShortenAuditResponse])
 async def get_audit_logs(db: Session = Depends(get_db)):

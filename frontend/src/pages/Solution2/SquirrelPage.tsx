@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback, useContext } from 'rea
 
 import { type AnimationStep, type TreeNode, type LogEntry } from '../../components/solution2/types';
 import { useTranslation } from 'react-i18next';
-import '../../components/solution2/squirrel-styles.css';
+import '../../styles/Solution2/squirrel-styles.css';
 import { TreeVisualization } from '../../components/solution2/tree-display';
 import { useTheme } from '../../contexts/ThemeContext';
 import { ControlsPanel, ActivityLog } from '../../components/solution2/control-panel';

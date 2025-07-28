@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Play, Square, Download, Activity } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../contexts/ThemeContext';
-import  styles  from 'components/solution4/styles';
+import  styles  from '../../styles/Solution4/styles';
 
 
 // --- Interfaces and Types ---

@@ -123,45 +123,237 @@ export const ViewButton = styled.button<{ active: boolean }>`
 `;
 
 export const ActionButton = styled.button`
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  background-color: #ffffff;
-  color: #333333;
+  padding: 10px 12px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background-color: transparent;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  transition: all 0.3s ease;
+  justify-content: center;
+  gap: 6px;
+  transition: 
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 14px;
+  font-weight: 500;
+  min-width: 44px;
+  min-height: 44px;
+  position: relative;
+  overflow: hidden;
+
+  /* Default hover effect */
+  &:hover {
+    transform: translateY(-3px);
+    background-color: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+    transition: transform 0.1s;
+  }
+
+  /* View Button - Blue Theme */
+ &.view {
+  color: #3b82f6;
 
   &:hover {
-    background-color: #f3f4f6;
-    transform: translateY(-1px);
+    border: 2px solid #2563eb; /* เส้นขอบสีน้ำเงินเข้ม */
+    background-color: #dbeafe; /* พื้นหลังสีฟ้าอ่อน (สี่เหลี่ยมเต็ม) */
+    color: #1e40af; /* สีข้อความและไอคอนน้ำเงินเข้ม */
+    box-shadow: none; /* ปิดเงาเพื่อความชัดเจน */
   }
 
-  &.primary {
-    background-color: #3b82f6;
-    color: #ffffff;
+  &:active {
+    background-color: #bfdbfe;
+  }
+}
 
-    &:hover {
-      background-color: #2563eb;
-    }
+/* Edit Button - Orange Theme */
+&.edit {
+  color: #f59e0b;
+
+  &:hover {
+    border: 2px solid #ea580c; /* เส้นขอบสีส้มเข้ม */
+    background-color: #ffedd5; /* พื้นหลังสีส้มอ่อน */
+    color: #c2410c; /* สีข้อความและไอคอนส้มเข้ม */
+    box-shadow: none;
   }
 
+  &:active {
+    background-color: #fed7aa;
+  }
+}
+
+/* Delete Button - Red Theme */
+&.delete {
+  color: #ef4444;
+
+  &:hover {
+    border: 2px solid #b91c1c; /* เส้นขอบสีแดงเข้ม */
+    background-color: #fee2e2; /* พื้นหลังสีแดงอ่อน */
+    color: #7f1d1d; /* สีข้อความและไอคอนแดงเข้ม */
+    box-shadow: none;
+  }
+
+  &:active {
+    background-color: #fecaca;
+  }
+}
+
+  /* Delete Button - Red Theme */
   &.delete {
     color: #ef4444;
 
     &:hover {
-      background-color: #fee2e2;
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(252, 165, 165, 0.25) 100%);
+      border-color: #ef4444;
+      color: #b91c1c;
+      box-shadow: 0 12px 28px rgba(239, 68, 68, 0.3);
+    }
+
+    &:active {
+      background: rgba(239, 68, 68, 0.25);
     }
   }
 
+  /* Primary Button - Solid Blue */
+  &.primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: #ffffff;
+    border: 2px solid #3b82f6;
+
+    &:hover {
+      background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+      border-color: #2563eb;
+      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.4);
+    }
+
+    &:active {
+      background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    }
+  }
+
+  /* Success Button - Green Theme */
+  &.success {
+    color: #10b981;
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(167, 243, 208, 0.25) 100%);
+      border-color: #10b981;
+      color: #047857;
+      box-shadow: 0 12px 28px rgba(16, 185, 129, 0.3);
+    }
+
+    &:active {
+      background: rgba(16, 185, 129, 0.25);
+    }
+  }
+
+  /* Warning Button - Yellow Theme */
+  &.warning {
+    color: #f59e0b;
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(252, 211, 77, 0.25) 100%);
+      border-color: #f59e0b;
+      color: #b45309;
+      box-shadow: 0 12px 28px rgba(245, 158, 11, 0.3);
+    }
+
+    &:active {
+      background: rgba(245, 158, 11, 0.25);
+    }
+  }
+
+  /* Info Button - Cyan Theme */
+  &.info {
+    color: #06b6d4;
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(165, 243, 252, 0.25) 100%);
+      border-color: #06b6d4;
+      color: #0369a1;
+      box-shadow: 0 12px 28px rgba(6, 182, 212, 0.3);
+    }
+
+    &:active {
+      background: rgba(6, 182, 212, 0.25);
+    }
+  }
+
+  /* Dark theme support */
+  [data-theme="dark"] & {
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 12px 24px rgba(255, 255, 255, 0.1);
+    }
+
+    &.view:hover {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(147, 197, 253, 0.35) 100%);
+      border-color: #3b82f6;
+      color: #93c5fd;
+      box-shadow: 0 12px 28px rgba(59, 130, 246, 0.35);
+    }
+
+    &.edit:hover {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.3) 0%, rgba(252, 211, 77, 0.35) 100%);
+      border-color: #f59e0b;
+      color: #fbbf24;
+      box-shadow: 0 12px 28px rgba(245, 158, 11, 0.35);
+    }
+
+    &.delete:hover {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(252, 165, 165, 0.35) 100%);
+      border-color: #ef4444;
+      color: #fca5a5;
+      box-shadow: 0 12px 28px rgba(239, 68, 68, 0.35);
+    }
+  }
+
+  /* Disabled state */
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+
+  /* Size variants */
+  &.small {
+    padding: 6px 8px;
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 12px;
+  }
+
+  &.large {
+    padding: 14px 16px;
+    min-width: 52px;
+    min-height: 52px;
+    font-size: 16px;
+  }
+
+  /* Icon only variant */
+  &.icon-only {
+    padding: 10px;
+    min-width: 44px;
+    gap: 0;
   }
 `;
+
+
 
 export const MainContent = styled.div`
   min-height: calc(100vh - 250px);

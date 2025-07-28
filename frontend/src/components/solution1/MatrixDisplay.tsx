@@ -1,6 +1,6 @@
 import React from 'react';
 import { type Position } from './types';
-import { styles } from './turtle-styles';
+import { styles } from '../../styles/Solution1/turtle-styles';
 
 interface MatrixDisplayProps {
   matrix: number[][];

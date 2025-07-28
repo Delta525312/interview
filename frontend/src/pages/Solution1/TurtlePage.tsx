@@ -5,7 +5,7 @@ import { Play, RefreshCw, Compass, Route, SlidersHorizontal, FileText, Square } 
 // --- Importar Componentes y Lógica ---
 import { type Position, type RouteResult, type LogEntry } from '../../components/solution1/types';
 import { calculateZigZagPath, calculateSpiralPath, findAndLabelRoutes } from '../../components/solution1/turtle-logic';
-import { styles, addDynamicStyles } from '../../components/solution1/turtle-styles';
+import { styles, addDynamicStyles } from '../../styles/Solution1/turtle-styles';
 import { MatrixDisplay } from '../../components/solution1/MatrixDisplay';
 import { WalkInputs } from '../../components/solution1/WalkInputs';
 // --- NOTA: Ajusta la siguiente ruta para que coincida con la ubicación de tu ThemeProvider ---

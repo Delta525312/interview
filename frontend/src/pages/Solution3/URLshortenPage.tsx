@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getStyles } from 'components/solution3/styles';
+import { getStyles } from '../../styles/Solution3/styles';
 import { type ShortenedURL, type ManagedURL, type AuditLog} from '../../components/solution3/types';
 import { Link, Copy, Zap, Shield, Globe, Sparkles, CheckCircle, AlertCircle, TrendingUp, Clock, ExternalLink, Edit, Trash2, BookOpen, Save, XCircle, Search } from 'lucide-react';
 import { Rnd } from 'react-rnd';
@@ -311,9 +311,9 @@ const handleLookup = async (e: React.FormEvent) => {
   }
 };
 
-const handleCopy = async (text: string, id: string) => {
+const handleCopy = async (short_key: string, id: string) => {
   try {
-    await navigator.clipboard.writeText(text);
+    await navigator.clipboard.writeText(short_key); // copy short_key
     setIsCopied(id);
     // PATCH clicks
     try {
@@ -321,7 +321,6 @@ const handleCopy = async (text: string, id: string) => {
         method: 'PATCH',
         headers: getAuthHeaders(),
       });
-      // Update managedUrls state immediately (optimistic update) and re-sort if needed
       setManagedUrls(prev => {
         const updated = prev.map(u => u.id === id ? { ...u, clicks: (u.clicks ?? 0) + 1 } : u);
         if (urlOrder === 'mostclick') {
@@ -329,11 +328,11 @@ const handleCopy = async (text: string, id: string) => {
         }
         return updated;
       });
-    } catch (err) {
+    } catch {
       // ไม่ต้องแจ้ง error ถ้า update click fail
     }
     Swal.fire({
-      position: 'top-end',
+      position: 'center',  // เปลี่ยนตำแหน่งเป็น center
       icon: 'success',
       title: t('swal.copiedSuccess'),
       showConfirmButton: false,
@@ -349,6 +348,7 @@ const handleCopy = async (text: string, id: string) => {
     });
   }
 };
+
 
     const clearHistory = () => {
         setRecentUrls([]);
@@ -586,7 +586,7 @@ const handleCopy = async (text: string, id: string) => {
             )}
           </div>
           <button
-            onClick={() => handleCopy(recentUrls[0].originalUrl, managedUrls.find(u => u.short_key === recentUrls[0].shortUrl)?.id || recentUrls[0].shortUrl)}
+            onClick={() => handleCopy(recentUrls[0].shortUrl, managedUrls.find(u => u.short_key === recentUrls[0].shortUrl)?.id || recentUrls[0].shortUrl)}
             style={{ ...styles.urlItemButton, transition: 'background 0.2s', borderRadius: 4 }}
             onMouseEnter={e => e.currentTarget.style.background = themeMode === 'dark' ? '#333' : '#eee'}
             onMouseLeave={e => e.currentTarget.style.background = 'none'}
@@ -663,7 +663,7 @@ const handleCopy = async (text: string, id: string) => {
                                                         </p>
                                                         </div>
                                                         <div style={styles.listItemActions}>
-                                                            <button onClick={() => handleCopy(url.original_url, url.id)} style={{ ...styles.actionButton, transition: 'background 0.2s', borderRadius: 4 }}
+                                                            <button onClick={() => handleCopy(url.short_key, url.id)} style={{ ...styles.actionButton, transition: 'background 0.2s', borderRadius: 4 }}
                                                                 onMouseEnter={e => e.currentTarget.style.background = themeMode === 'dark' ? '#333' : '#eee'}
                                                                 onMouseLeave={e => e.currentTarget.style.background = 'none'}>
                                                                 {isCopied === url.id ? <CheckCircle size={16} style={{ transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = styles.palette.accent} onMouseLeave={e => e.currentTarget.style.color = ''} /> : <Copy size={16} style={{ transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = styles.palette.accent} onMouseLeave={e => e.currentTarget.style.color = ''} />}
@@ -687,7 +687,7 @@ const handleCopy = async (text: string, id: string) => {
                                             <div key={log.id} style={styles.listItem}>
                                                 <div style={styles.listItemContent}>
                                                     <div style={styles.urlItemLeft}>
-                                                        <p style={styles.logAction}>{log.action}</p>
+                                                        <p style={styles.logAction}>{log.action} {log.short_key} </p>
                                                         <p style={styles.logMeta}>By: <strong>{log.performed_by}</strong> at {new Date(log.performed_at).toLocaleString()}</p>
                                                     </div>
                                                 </div>

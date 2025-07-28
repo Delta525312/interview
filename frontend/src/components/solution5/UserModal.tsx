@@ -9,7 +9,7 @@ import {
   CancelButton, CloseButton, FormSection, SectionTitle, FormRow,
   ProfilePhotoSection, ProfilePhotoWrapper, ProfilePhoto, ProfilePhotoPlaceholder,
   TextArea
-} from './styles';
+} from '../../styles/Solution5/styles';
 import { TFunction } from 'i18next';
 
 interface UserModalProps {

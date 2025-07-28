@@ -19,7 +19,7 @@ import {
   Container, Header, Title, MainContent, TableView,
   CardGrid, ListView, Pagination, PageInfo, PageButton,
   EmptyState, LoadingState
-} from '../../components/solution5/styles';
+} from '../../styles/Solution5/styles';
 
 export const Solution5: React.FC = () => {
   const { t } = useTranslation();

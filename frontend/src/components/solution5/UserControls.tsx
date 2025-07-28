@@ -6,7 +6,7 @@ import { ViewMode } from './types';
 import { 
   Controls, SearchWrapper, SearchInput, ActionButton, 
   ViewToggle, ViewButton, RowSelector
-} from './styles';
+} from '../../styles/Solution5/styles';
 import { TFunction } from 'i18next';
 
 interface UserControlsProps {
