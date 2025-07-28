@@ -30,7 +30,7 @@
     "rateLimit": "API Rate Limiting & Throttling",
     "rateLimitDesc": "สถาปัตยกรรม Microservices ที่ซับซ้อนพร้อมระบบจำกัดอัตราอัจฉริยะ การติดตามแบบเรียลไทม์ และกลไกการ Throttling แบบกระจาย",
     "fullStack": "ระบบจัดการผู้ใช้แบบ Full-Stack",
-    "fullStackDesc": "แอปพลิเคชัน CRUD สมบูรณ์พร้อม RESTful API การเชื่อมต่อฐานข้อมูล PostgreSQL React frontend และระบบการตรวจสอบสิทธิ์ครบถ้วน"
+    "fullStackDesc": "แอปพลิเคชัน CRUD สมบูรณ์พร้อม RESTful API การเชื่อมต่อฐานข้อมูล PostgreSQL React frontend"
   },
   "userpage": {
     "firstname": "ชื่อจริง",

@@ -26,7 +26,7 @@
     "rateLimit": "Rate Limiting & Throttling API",
     "rateLimitDesc": "Sophisticated microservices architecture with intelligent rate limiting, real-time monitoring, and distributed throttling mechanisms.",
     "fullStack": "Full-Stack User Management System",
-    "fullStackDesc": "Complete CRUD application with RESTful API, PostgreSQL database integration, React frontend, and comprehensive authentication system."
+    "fullStackDesc": "Complete CRUD application with RESTful API, PostgreSQL database integration, React frontend "
   },
   "userpage": {
     "firstname": "First Name",

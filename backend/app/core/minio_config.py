@@ -8,18 +8,19 @@ from minio.error import S3Error
 load_dotenv()
 
 # 1. ดึงค่าจาก Environment Variables
-MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "minio:9000")
+MINIO_ENDPOINT = os.getenv("MINIO_HOST", "minio")
+MINIO_PORT = os.getenv("MINIO_PORT", "9000")
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "minioadmin")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY", "minioadmin")
 
-# กำหนดค่า MinIO client
+MINIO_FULL = f"{MINIO_ENDPOINT}:{MINIO_PORT}"
+
 minio_client = Minio(
-    endpoint=MINIO_ENDPOINT,
+    endpoint=MINIO_FULL,
     access_key=MINIO_ACCESS_KEY,
     secret_key=MINIO_SECRET_KEY,
     secure=False
 )
-
 bucket_name = "user-profile"
 
 # public read policy JSON

@@ -30,7 +30,7 @@
     "rateLimit": "速率限制与节流 API",
     "rateLimitDesc": "复杂的微服务架构，具有智能速率限制、实时监控和分布式节流机制。",
     "fullStack": "全栈用户管理系统",
-    "fullStackDesc": "完整的CRUD应用程序，包含RESTful API、PostgreSQL数据库集成、React前端和完整的身份验证系统。"
+    "fullStackDesc": "完整的CRUD应用程序，包含RESTful API、PostgreSQL数据库集成、React。"
   },
   "userpage": {
     "firstname": "名",
