@@ -1,3 +1,6 @@
+
+
+
 import React, { useState, useEffect, useRef, useCallback, useContext } from 'react';
 // --- Lock context for builder ---
 
@@ -90,6 +93,7 @@ const deepCloneTree = (node: TreeNode, parent: TreeNode | null = null): TreeNode
 // =================================================================================
 // --- MAIN APP COMPONENT ---
 // =================================================================================
+
 export const SquirrelPage: React.FC = () => {
     const { t } = useTranslation();
     const { themeMode } = useTheme();
@@ -106,6 +110,28 @@ export const SquirrelPage: React.FC = () => {
     const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const sounds = useRef<{ [key: string]: HTMLAudioElement }>({});
     const animationState = useRef<{ trips: string[], initialTree: TreeNode | null, tripIndex: number, stepIndex: number, sequence: AnimationStep[] }>({ trips: [], initialTree: null, tripIndex: 0, stepIndex: 0, sequence: [] });
+
+    // --- Sound cleanup on mute and unmount ---
+    useEffect(() => {
+        if (isMuted && sounds.current) {
+            Object.values(sounds.current).forEach(sound => {
+                (sound as HTMLAudioElement).pause();
+                (sound as HTMLAudioElement).currentTime = 0;
+            });
+        }
+    }, [isMuted]);
+
+    useEffect(() => {
+        return () => {
+            if (sounds.current) {
+                Object.values(sounds.current).forEach(sound => {
+                    (sound as HTMLAudioElement).pause();
+                    (sound as HTMLAudioElement).currentTime = 0;
+                });
+            }
+            if (animationTimeoutRef.current) clearTimeout(animationTimeoutRef.current);
+        };
+    }, []);
 
     useEffect(() => {
         const savedMuted = localStorage.getItem('soundMuted') === 'true';
@@ -128,7 +154,7 @@ export const SquirrelPage: React.FC = () => {
     const playSound = useCallback((sound: 'walk' | 'pick' | 'drop') => {
         if (!isMuted && sounds.current[sound]) {
             sounds.current[sound].currentTime = 0;
-            sounds.current[sound].play().catch(console.error);
+            sounds.current[sound].play().catch();
         }
     }, [isMuted]);
 

@@ -15,7 +15,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# 💡 1. เพิ่มตัวแปรสำหรับ URL ที่จะใช้แทนที่
 MINIO_INTERNAL_URL = os.getenv("MINIO_INTERNAL_URL", "http://minio:9000")
 MINIO_PUBLIC_URL = os.getenv("MINIO_PUBLIC_URL", "http://localhost:9000")
 
@@ -90,7 +89,6 @@ async def create_user(
     last_name: str = Form(...),
     username: str = Form(...),
     email: str = Form(...),
-    # ... พารามิเตอร์อื่นๆ เหมือนเดิม
     citizen_id: Optional[str] = Form(None),
     mobile_no: Optional[str] = Form(None),
     address: Optional[str] = Form(None),
@@ -105,7 +103,7 @@ async def create_user(
     file: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db)
 ):
-    # ... โค้ดส่วนต้นเหมือนเดิม
+
     if db.query(User).filter(User.email == email).first():
         raise HTTPException(status_code=400, detail="Email already exists")
 
@@ -165,7 +163,6 @@ async def update_user(
     user_id: str,
     first_name: Optional[str] = Form(None),
     last_name: Optional[str] = Form(None),
-    # ... พารามิเตอร์อื่นๆ เหมือนเดิม
     username: Optional[str] = Form(None),
     email: Optional[str] = Form(None),
     citizen_id: Optional[str] = Form(None),
@@ -182,7 +179,6 @@ async def update_user(
     file: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db)
 ):
-    # ... โค้ดส่วนต้นและส่วนอัปเดตไฟล์เหมือนเดิม ...
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

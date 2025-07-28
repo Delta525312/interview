@@ -1,12 +1,11 @@
 import React from 'react';
 import { type Position } from './types';
 import { styles } from '../../styles/Solution1/turtle-styles';
-
 interface MatrixDisplayProps {
-  matrix: number[][];
-  turtlePos: Position | null;
-  visited: Set<string>;
-  turtleImage: string;
+  matrix: number[][];           // แมทริกซ์ 2 มิติ ตัวเลข
+  turtlePos: Position | null;   // ตำแหน่งปัจจุบันของเต่า เช่น { row: 1, col: 2 }
+  visited: Set<string>;         // เซ็ตของตำแหน่งที่เคยไปแล้ว เช่น '1-2', '2-3'
+  turtleImage: string;          // path รูปภาพของเต่า
 }
 
 export const MatrixDisplay: React.FC<MatrixDisplayProps> = ({ matrix, turtlePos, visited, turtleImage }) => (
@@ -22,3 +21,5 @@ export const MatrixDisplay: React.FC<MatrixDisplayProps> = ({ matrix, turtlePos,
     )}
   </div>
 );
+
+//ใช้ styles.cellVisited เพื่อเเสดงเส้นทางที่เต่าเคยไปแล้ว

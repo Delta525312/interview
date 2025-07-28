@@ -1,6 +1,7 @@
 import { type Position,RouteResult } from './types';
 
 // 1. เดินแบบ Zig-Zag 
+// เดินแบบขึ้น-ลงตามคอลัมน์ ซ้ายไปขวา 
 export function calculateZigZagPath(matrix: number[][]): Position[] {
   if (!matrix || matrix.length === 0) return [];
   const path: Position[] = [];
@@ -13,121 +14,146 @@ export function calculateZigZagPath(matrix: number[][]): Position[] {
   return path;
 }
 
+
 // 2. เดินตามเข็มนาฬิกา (Spiral Path)
 export function calculateSpiralPath(matrix: number[][], startPos: Position): Position[] {
+  // --- 1. การตั้งค่าเริ่มต้น ---
   const rows = matrix.length;
   const cols = matrix[0].length;
   
+  // ตรวจสอบว่าจุดเริ่มต้นอยู่นอกขอบเขตของ matrix หรือไม่
   if (startPos.row >= rows || startPos.col >= cols || startPos.row < 0 || startPos.col < 0) {
-    return [];
+    return []; // ถ้าอยู่นอกขอบเขต คืนค่า path ว่าง
   }
 
-  const path: Position[] = [];
+  const path: Position[] = []; // Array สำหรับเก็บเส้นทางการเดินทั้งหมด
+  // สร้าง Array 2 มิติเพื่อติดตามช่องที่เคยเดินผ่านไปแล้ว (visited)
   const visited = new Array(rows).fill(false).map(() => new Array(cols).fill(false));
   
+  // กำหนดทิศทางการเดิน 4 ทิศทาง (ขวา, ล่าง, ซ้าย, บน)
   const directions = [
-    [0, 1],   // ขวา
-    [1, 0],   // ล่าง
-    [0, -1],  // ซ้าย
-    [-1, 0]   // บน
+    [0, 1],   // ขวา: แถวไม่เปลี่ยน, คอลัมน์ +1
+    [1, 0],   // ล่าง: แถว +1, คอลัมน์ไม่เปลี่ยน
+    [0, -1],  // ซ้าย: แถวไม่เปลี่ยน, คอลัมน์ -1
+    [-1, 0]   // บน: แถว -1, คอลัมน์ไม่เปลี่ยน
   ];
   
-  let { row, col } = startPos;
-  let dir = 0;
-  let turnCount = 0; // นับจำนวนครั้งที่เลี้ยว
-  let isFirstLoop = true; // ตรวจสอบว่าเป็นวงแรกหรือไม่
+  // --- 2. ตัวแปรควบคุมสถานะการเดิน ---
+  let { row, col } = startPos; // ตำแหน่งปัจจุบัน, เริ่มจากจุดที่กำหนด
+  let dir = 0; // ทิศทางปัจจุบัน (0=ขวา, 1=ล่าง, 2=ซ้าย, 3=บน)
+  let turnCount = 0; // ตัวนับจำนวนครั้งที่เลี้ยว, ใช้สำหรับเงื่อนไขพิเศษในวงแรก
+  let isFirstLoop = true; // Flag เพื่อตรวจสอบว่ายังอยู่ใน "วงแรก" ของก้นหอยหรือไม่
   
+  // เพิ่มจุดเริ่มต้นเข้าไปใน path และทำเครื่องหมายว่าเคยเดินแล้ว
   path.push({ row, col });
   visited[row][col] = true;
   
+  // --- 3. Loop การเดินหลัก ---
+  // วนไปเรื่อยๆ จนกว่าจะเดินครบทุกช่อง (path.length เท่ากับจำนวนช่องทั้งหมดใน matrix)
   while (path.length < rows * cols) {
+    // คำนวณตำแหน่งถัดไปตามทิศทางปัจจุบัน
     let nextRow = row + directions[dir][0];
     let nextCol = col + directions[dir][1];
     
-    let shouldTurn = false;
+    let shouldTurn = false; // Flag สำหรับตัดสินใจว่าต้องเลี้ยวหรือไม่
     
-    // เงื่อนไขพิเศษสำหรับวงแรก
+    // --- 4. ตรรกะการเลี้ยวแบบพิเศษ (สำหรับวงแรกเท่านั้น) ---
+    // ส่วนนี้ซับซ้อนเพราะต้องจัดการการสร้างวงก้นหอยชั้นในสุดให้ถูกต้อง
+    // เมื่อจุดเริ่มต้นไม่ได้อยู่ที่มุม
     if (isFirstLoop) {
-      // รอบที่ 3 (กำลังเดินซ้าย)
+      // กรณีที่เลี้ยวมา 2 ครั้งแล้ว และกำลังจะเดินไปทางซ้าย (dir === 2)
       if (turnCount === 2 && dir === 2) {
-        // ถ้า startPos.row > startPos.col (เช่น 5,1)
+        // เงื่อนไขเหล่านี้ใช้เพื่อบังคับให้เลี้ยว "ขึ้น" ในจังหวะที่ถูกต้องเพื่อปิดวงแรก
         if (startPos.row > startPos.col && col === startPos.col) {
           shouldTurn = true;
-        }
-        // ถ้า startPos.col > startPos.row (เช่น 1,5)
-        else if (startPos.col > startPos.row && row === startPos.row) {
+        } else if (startPos.col > startPos.row && row === startPos.row) {
           shouldTurn = true;
-        }
-        // ถ้า startPos.row = startPos.col
-        else if (startPos.row === startPos.col && row === startPos.row - 1 && col === startPos.col) {
+        } else if (startPos.row === startPos.col && row === startPos.row - 1 && col === startPos.col) {
           shouldTurn = true;
         }
       }
-      // รอบที่ 4 (กำลังเดินขึ้น)
+      // กรณีที่เลี้ยวมา 3 ครั้งแล้ว และกำลังจะเดินขึ้น (dir === 3)
       else if (turnCount === 3 && dir === 3) {
-        // เงื่อนไขเดิมสำหรับการเลี้ยวรอบที่ 4
+        // บังคับให้เลี้ยว "ขวา" เมื่อเดินขึ้นมาถึงตำแหน่งที่เหมาะสมเพื่อปิดวง
         if (nextRow === startPos.row && nextCol === startPos.col - 1) {
           shouldTurn = true;
         }
       }
     }
     
-    // เงื่อนไขปกติ: ชนขอบหรือช่องที่เคยเดินแล้ว
-    if (!shouldTurn && (nextRow < 0 || nextRow >= rows || 
+    // --- 5. ตรรกะการเลี้ยวแบบปกติ ---
+    // ถ้ายังไม่มีการตัดสินใจให้เลี้ยวจากเงื่อนไขพิเศษ, ให้ตรวจสอบเงื่อนไขปกติ
+    // จะเลี้ยวเมื่อ: 1. ชนขอบ หรือ 2.เจอช่องที่เคยเดินแล้ว
+    if (!shouldTurn && (
+        nextRow < 0 || nextRow >= rows || 
         nextCol < 0 || nextCol >= cols || 
-        visited[nextRow][nextCol])) {
+        visited[nextRow][nextCol]
+    )) {
       shouldTurn = true;
     }
     
+    // --- 6. การดำเนินการเลี้ยวและเคลื่อนที่ ---
     if (shouldTurn) {
-      // เลี้ยว
+      // เปลี่ยนทิศทาง: (0+1)%4=1, (1+1)%4=2, (2+1)%4=3, (3+1)%4=0
       dir = (dir + 1) % 4;
       turnCount++;
       
-      // ถ้าเลี้ยวครบ 4 ครั้งแล้ว = จบวงแรก
+      // เมื่อเลี้ยวครบ 4 ครั้ง ถือว่าจบการสร้างวงแรก
       if (turnCount >= 4) {
         isFirstLoop = false;
       }
       
-      // คำนวณตำแหน่งใหม่หลังเลี้ยว
+      // คำนวณตำแหน่งถัดไปอีกครั้งหลังจากเปลี่ยนทิศทางแล้ว
       nextRow = row + directions[dir][0];
       nextCol = col + directions[dir][1];
     }
     
-    // ตรวจสอบว่าสามารถเดินต่อได้หรือไม่
-    if (nextRow >= 0 && nextRow < rows && 
+    // ตรวจสอบว่าตำแหน่งถัดไป (หลังการตัดสินใจทั้งหมด) สามารถเดินไปได้หรือไม่
+    if (
+        nextRow >= 0 && nextRow < rows && 
         nextCol >= 0 && nextCol < cols && 
-        !visited[nextRow][nextCol]) {
+        !visited[nextRow][nextCol]
+    ) {
+      // ถ้าเดินได้, อัปเดตตำแหน่งปัจจุบัน
       row = nextRow;
       col = nextCol;
+      // เพิ่มตำแหน่งใหม่ลงใน path และทำเครื่องหมายว่าเดินแล้ว
       path.push({ row, col });
       visited[row][col] = true;
     } else {
-      // ถ้าเดินต่อไม่ได้หลังเลี้ยว ให้ลองเลี้ยวต่อ
+      // --- 7. การจัดการทางตัน ---
+      // กรณีที่แม้แต่เลี้ยวแล้วก็ยังเดินต่อไม่ได้ (เช่น ติดมุม)
       let attempts = 0;
+      // พยายามเลี้ยวหาทางไปต่อ
       while (attempts < 4) {
         dir = (dir + 1) % 4;
         nextRow = row + directions[dir][0];
         nextCol = col + directions[dir][1];
         
-        if (nextRow >= 0 && nextRow < rows && 
+        // ถ้าหาทางไปต่อได้
+        if (
+            nextRow >= 0 && nextRow < rows && 
             nextCol >= 0 && nextCol < cols && 
-            !visited[nextRow][nextCol]) {
+            !visited[nextRow][nextCol]
+        ) {
           row = nextRow;
           col = nextCol;
           path.push({ row, col });
           visited[row][col] = true;
-          break;
+          break; // ออกจาก loop การหาทาง
         }
         attempts++;
       }
       
-      if (attempts >= 4) break; // ไม่มีทางไปแล้ว
+      // ถ้าลองครบ 4 ทิศแล้วยังไปไหนไม่ได้ แสดงว่าเดินครบแล้ว
+      if (attempts >= 4) break; 
     }
   }
   
+  // คืนค่าเส้นทางการเดินทั้งหมด
   return path;
 }
+
 
 // 3. ค้นหาเส้นทาง (Find Path)
 // --- LOGIC FUNCTIONS ---

@@ -7,20 +7,26 @@ import { SquirrelPage } from 'pages/Solution2/SquirrelPage';
 import { URLshortenPage } from 'pages/Solution3/URLshortenPage';
 import { Ratelimit} from 'pages/Solution4/Ratelimit';
 import { Solution5 } from 'pages/Solution5/Solution5';
-
+import { NotFound } from 'pages/NotFound';
+import { ScrollToTop } from 'components/common/ScrollToTop';
+import { ErrorBoundary } from 'components/common/ErrorBoundary';
 export const AppRoutes: React.FC = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<AlgorithmTestHome />} />
-          <Route path="solution-1" element={<TurtlePage />} />
-          <Route path="solution-2" element={<SquirrelPage />} />
-          <Route path="solution-3" element={<URLshortenPage />} />
-          <Route path="solution-4" element={<Ratelimit />} />
-          <Route path="solution-5" element={<Solution5 />} />
-        </Route>
-      </Routes>
+      <ScrollToTop />
+      <ErrorBoundary>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<AlgorithmTestHome />} />
+            <Route path="solution-1" element={<TurtlePage />} />
+            <Route path="solution-2" element={<SquirrelPage />} />
+            <Route path="solution-3" element={<URLshortenPage />} />
+            <Route path="solution-4" element={<Ratelimit />} />
+            <Route path="solution-5" element={<Solution5 />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 };

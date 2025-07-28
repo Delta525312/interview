@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import * as d3 from 'd3';
+import * as d3 from 'd3'; //สำหรับการลากเส้นต้นไม้
 import { type TreeNode } from './types'; // Assuming 'types.ts' is in the same directory
 
 // =================================================================================

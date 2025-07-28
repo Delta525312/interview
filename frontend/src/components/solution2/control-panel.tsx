@@ -4,6 +4,8 @@ import { Rnd } from 'react-rnd';
 import React, { useState, useEffect, useContext } from 'react';
 import { TreeNode, InputMode,LogEntry } from './types';
 const BuilderLockContext = React.createContext<{isSimulating: boolean, isPaused: boolean}>({isSimulating: false, isPaused: false});
+
+  //  parseAndValidateInput ตัวเเปลง rawinput เป็น walnuts, capacity, treeStruct ใช้ในหน้า render tree
 const parseAndValidateInput = (input: string, t: Function) => {
     const parts = input.split(',');
     if (parts.length < 2) throw new Error(t('squirrel.error.invalidFormat'));
@@ -15,6 +17,8 @@ const parseAndValidateInput = (input: string, t: Function) => {
     if (!treeStruct) throw new Error(t('squirrel.error.invalidTreeStruct'));
     return { walnuts, capacity, treeStruct };
 };
+
+//  buildTreeFromLegacyStruct โครงสร้างต้นไม้จาก string legacy struct เช่น "ABEG)H)))COHGB)))))DFIK)L))JM))))" node เเม่ไล่ไป node ลูก
 
 const buildTreeFromLegacyStruct = (struct: string, capacity: number, t: Function): TreeNode => {
     if (!struct || !/[a-zA-Z]/.test(struct[0])) throw new Error(t('squirrel.error.invalidTreeStruct'));
@@ -38,6 +42,7 @@ const buildTreeFromLegacyStruct = (struct: string, capacity: number, t: Function
     return root;
 };
 
+//เอาไว้แปลงโครงสร้างข้อมูลต้นไม้กลับไปเป็น "raw string"
 const serializeTreeToLegacy = (node: TreeNode): string => {
     let s = node.id;
     for (const child of node.children) {
@@ -48,13 +53,14 @@ const serializeTreeToLegacy = (node: TreeNode): string => {
 
 
 
-
+//ไว้สร้างสำเนาของโหนดต้นไม้
 const deepCloneTree = (node: TreeNode, parent: TreeNode | null = null): TreeNode => {
     const newNode: TreeNode = { ...node, parent: parent, children: [] };
     newNode.children = node.children.map(child => deepCloneTree(child, newNode));
     return newNode;
 };
 
+//หน้าเเสดงผล โครงสร้างต้นไม้
 interface TreeBuilderProps { node: TreeNode; onUpdate: (node: TreeNode) => void; path?: string[]; }
 const TreeBuilderNode: React.FC<TreeBuilderProps> = ({ node, onUpdate, path = [] }) => {
     // Helper: get depth
@@ -118,6 +124,7 @@ const TreeBuilderNode: React.FC<TreeBuilderProps> = ({ node, onUpdate, path = []
     );
 };
 
+//ตัวควบคุมการสร้างต้นไม้ 
 interface ControlsPanelProps { onUpdateInput: (walnuts: number, capacity: number, tree: TreeNode) => void; onStartPauseResume: () => void; onReset: () => void; isSimulating: boolean; isPaused: boolean; error: string | null; t: Function; initialValues: {walnuts: number, capacity: number, tree: TreeNode | null}; addLog: (msg: string, type?: "info" | "error" | "success") => void; }
 const ControlsPanel: React.FC<ControlsPanelProps> = ({ onUpdateInput, onStartPauseResume, onReset, isSimulating, isPaused, error, t, initialValues, addLog }) => {
     const [mode, setMode] = useState<InputMode>('builder');
@@ -146,6 +153,7 @@ const ControlsPanel: React.FC<ControlsPanelProps> = ({ onUpdateInput, onStartPau
         }
     }, [walnuts, capacity, builderTree, onUpdateInput]);
 
+  
     const handleRawInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (locked) return;
         const newRawInput = e.target.value;

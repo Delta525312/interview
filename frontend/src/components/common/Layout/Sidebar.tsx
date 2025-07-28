@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { useSound } from 'contexts/SoundContext';
 import {
   Home,
-  Layers,
-  Package,
-  Box,
-  Briefcase,
-  FileText,
+  Turtle,
+  Squirrel,
+  Link2,
+  Network,
+  UserCog,
   ChevronLeft,
   ChevronRight,
   Sparkles
@@ -188,11 +188,11 @@ export const Sidebar: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   const menuItems = [
-    { path: '/solution-1', label: t('nav.solution1'), icon: Layers },
-    { path: '/solution-2', label: t('nav.solution2'), icon: Package },
-    { path: '/solution-3', label: t('nav.solution3'), icon: Box },
-    { path: '/solution-4', label: t('nav.solution4'), icon: Briefcase },
-    { path: '/solution-5', label: t('nav.solution5'), icon: FileText },
+    { path: '/solution-1', label: t('nav.solution1'), icon: Turtle },
+    { path: '/solution-2', label: t('nav.solution2'), icon: Squirrel },
+    { path: '/solution-3', label: t('nav.solution3'), icon: Link2 },
+    { path: '/solution-4', label: t('nav.solution4'), icon: Network },
+    { path: '/solution-5', label: t('nav.solution5'), icon: UserCog },
   ];
 
   const handleNavClick = () => {

@@ -5,6 +5,7 @@ import { AppRoutes } from './routes';
 import GlobalStyles from './styles/global';
 import { Toaster } from 'react-hot-toast';
 
+
 const App: React.FC = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>

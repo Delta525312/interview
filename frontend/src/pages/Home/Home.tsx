@@ -83,7 +83,7 @@ const Header: React.FC = () => {
   };
   return (
     <header style={headerStyle}>
-      <div style={{...styles.container('1280px'), ...styles.flexBetween(), padding: '16px 24px'}}>
+      <div style={{...styles.container('1580px'), ...styles.flexBetween(), padding: '16px 24px'}}>
         <div style={logoStyle}>
           <div style={styles.iconContainer(colors.primary, 40)}>
             <Code size={24} color="white" />
