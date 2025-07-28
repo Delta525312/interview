@@ -29,6 +29,12 @@
     "fullStackDesc": "Complete CRUD application with RESTful API, PostgreSQL database integration, React frontend "
   },
   "userpage": {
+    "departmentSupport": "Support",
+    "departmentDevelopment": "Development",
+    "roleAnalyst": "Analyst",
+    "roleConsultant": "Consultant",
+    "roleDeveloper": "Developer",
+    "refresh": "Refresh",
     "firstname": "First Name",
     "lastname": "Last Name",
     "error": "Error",

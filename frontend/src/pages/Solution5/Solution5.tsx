@@ -26,8 +26,12 @@ export const Solution5: React.FC = () => {
   const { themeMode } = useTheme();
 
   const [users, setUsers] = useState<User[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]); // for frontend filtering
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [department, setDepartment] = useState('');
+  const [role, setRole] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('table');
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -41,46 +45,62 @@ export const Solution5: React.FC = () => {
 
   const baseUrl = process.env.REACT_APP_API_URL || 'https://api.example.com';
 
-  const fetchUsers = useCallback(async () => {
+  // Fetch all users for frontend filtering
+  const fetchAllUsers = useCallback(async () => {
     setLoading(true);
     try {
-      const start = (currentPage - 1) * rowsPerPage;
-      const response = await fetch(
-        `${baseUrl}/api/v1/user/?q=${searchQuery}&start=${start}&limit=${rowsPerPage}`
-      );
+      const response = await fetch(`${baseUrl}/api/v1/user/?q=&start=0&limit=1000`);
       const data = await response.json();
-      if (Array.isArray(data.data) && typeof data.total_pages === 'number') {
-        setUsers(data.data);
-        setTotalPages(data.total_pages);
-      } else if (Array.isArray(data.items) && typeof data.total === 'number') {
-        setUsers(data.items);
-        setTotalPages(Math.ceil(data.total / rowsPerPage));
-      } else if (Array.isArray(data)) {
-        setUsers(data);
-        setTotalPages(1);
-      } else {
-        setUsers([]);
-        setTotalPages(1);
-      }
+      let all: User[] = [];
+      if (Array.isArray(data.data)) all = data.data;
+      else if (Array.isArray(data.items)) all = data.items;
+      else if (Array.isArray(data)) all = data;
+      setAllUsers(all);
     } catch (error) {
-      Swal.fire({ icon: 'error', title: t('error'), text: t('fetchError') });
+      setAllUsers([]);
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, currentPage, rowsPerPage, t, baseUrl]);
+  }, [baseUrl]);
+
+  // Filtering logic
+  const filterUsers = useCallback(() => {
+    let filtered = allUsers;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter(u =>
+        u.display_name?.toLowerCase().includes(q) ||
+        u.username?.toLowerCase().includes(q) ||
+        u.email?.toLowerCase().includes(q)
+      );
+    }
+    if (department) filtered = filtered.filter(u => u.department === department);
+    if (role) filtered = filtered.filter(u => u.role === role);
+    setTotalPages(Math.max(1, Math.ceil(filtered.length / rowsPerPage)));
+    const start = (currentPage - 1) * rowsPerPage;
+    setUsers(filtered.slice(start, start + rowsPerPage));
+  }, [allUsers, searchQuery, department, role, rowsPerPage, currentPage]);
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+    fetchAllUsers();
+  }, [fetchAllUsers]);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+  useEffect(() => {
+    filterUsers();
+  }, [allUsers, searchQuery, department, role, rowsPerPage, currentPage, filterUsers]);
+
+  // Search only on submit
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSearchQuery(searchInput);
     setCurrentPage(1);
   };
 
+  // Rows per page only changes on search
   const handleRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
     setCurrentPage(1);
+    // Optionally, you can trigger search here if needed
   };
 
   const handleCreate = () => {
@@ -135,7 +155,7 @@ export const Solution5: React.FC = () => {
         const response = await fetch(`${baseUrl}/api/v1/user/${user.id}`, { method: 'DELETE' });
         if (response.ok) {
           Swal.fire(t('deleted'), t('deleteSuccess'), 'success');
-          fetchUsers();
+          fetchAllUsers();
         } else {
           throw new Error('Delete failed');
         }
@@ -199,7 +219,7 @@ export const Solution5: React.FC = () => {
       if (response.ok) {
         Swal.fire({ icon: 'success', title: 'Success', text: modalMode === 'create' ? 'Create success' : 'Update success' });
         setShowModal(false);
-        fetchUsers();
+        fetchAllUsers();
       } else {
         const error = await response.json();
         throw new Error(error.detail || 'Operation failed');
@@ -238,12 +258,30 @@ export const Solution5: React.FC = () => {
     <Container data-theme={themeMode}>
       <Header>
         <Title>{t('userpage.userManagement')}</Title>
-        <UserControls
-          searchQuery={searchQuery} handleSearch={handleSearch}
-          rowsPerPage={rowsPerPage} handleRowsPerPageChange={handleRowsPerPageChange}
-          viewMode={viewMode} setViewMode={setViewMode}
-          handleCreate={handleCreate} t={t}
-        />
+      <UserControls
+        searchQuery={searchQuery}
+        handleSearch={handleSearch}
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+        rowsPerPage={rowsPerPage}
+        handleRowsPerPageChange={handleRowsPerPageChange}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        handleCreate={handleCreate}
+        t={t}
+        department={department}
+        setDepartment={val => { setDepartment(val); setCurrentPage(1); }}
+        role={role}
+        setRole={val => { setRole(val); setCurrentPage(1); }}
+        onRefresh={() => {
+          setDepartment('');
+          setRole('');
+          setSearchInput('');
+          setSearchQuery('');
+          setCurrentPage(1);
+          fetchAllUsers();
+        }}
+      />
       </Header>
       
       <MainContent>{renderContent()}</MainContent>

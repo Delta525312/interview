@@ -33,6 +33,12 @@
     "fullStackDesc": "完整的CRUD应用程序，包含RESTful API、PostgreSQL数据库集成、React。"
   },
   "userpage": {
+    "departmentSupport": "支持部",
+    "departmentDevelopment": "开发部",
+    "roleAnalyst": "分析师",
+    "roleConsultant": "顾问",
+    "roleDeveloper": "开发人员",
+    "refresh": "刷新",
     "firstname": "名",
     "lastname": "姓",
     "error": "错误",

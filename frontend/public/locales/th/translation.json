@@ -33,6 +33,12 @@
     "fullStackDesc": "แอปพลิเคชัน CRUD สมบูรณ์พร้อม RESTful API การเชื่อมต่อฐานข้อมูล PostgreSQL React frontend"
   },
   "userpage": {
+    "departmentSupport": "ฝ่ายสนับสนุน",
+    "departmentDevelopment": "ฝ่ายพัฒนา",
+    "roleAnalyst": "นักวิเคราะห์",
+    "roleConsultant": "ที่ปรึกษา",
+    "roleDeveloper": "นักพัฒนา",
+    "refresh": "รีเฟรช",
     "firstname": "ชื่อจริง",
     "lastname": "นามสกุล",
     "error": "เกิดข้อผิดพลาด",
