@@ -28,6 +28,9 @@ export const Solution5: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [department, setDepartment] = useState('');
+  const [role, setRole] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('table');
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -73,8 +76,9 @@ export const Solution5: React.FC = () => {
     fetchUsers();
   }, [fetchUsers]);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+  const handleSearch = (e: React.FormEvent | React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault?.();
+    setSearchQuery(searchInput);
     setCurrentPage(1);
   };
 
@@ -239,10 +243,28 @@ export const Solution5: React.FC = () => {
       <Header>
         <Title>{t('userpage.userManagement')}</Title>
         <UserControls
-          searchQuery={searchQuery} handleSearch={handleSearch}
-          rowsPerPage={rowsPerPage} handleRowsPerPageChange={handleRowsPerPageChange}
-          viewMode={viewMode} setViewMode={setViewMode}
-          handleCreate={handleCreate} t={t}
+          searchQuery={searchQuery}
+          handleSearch={handleSearch}
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+          rowsPerPage={rowsPerPage}
+          handleRowsPerPageChange={handleRowsPerPageChange}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+          handleCreate={handleCreate}
+          t={t}
+          department={department}
+          setDepartment={setDepartment}
+          role={role}
+          setRole={setRole}
+          onRefresh={() => {
+            setDepartment('');
+            setRole('');
+            setSearchInput('');
+            setSearchQuery('');
+            setCurrentPage(1);
+            fetchUsers();
+          }}
         />
       </Header>
       
