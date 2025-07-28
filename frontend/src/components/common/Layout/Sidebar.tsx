@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useSound } from 'contexts/SoundContext';
 import {
-  Home,
+
   Turtle,
   Squirrel,
   Link2,
@@ -13,7 +13,7 @@ import {
   UserCog,
   ChevronLeft,
   ChevronRight,
-  Sparkles
+  Zap
 } from 'lucide-react';
 
 const SidebarWrapper = styled(motion.nav)`
@@ -207,7 +207,7 @@ export const Sidebar: React.FC = () => {
 >
   <NavContainer>
       <LogoSection $collapsed={collapsed} layout>
-        <Sparkles />
+        <Zap />
         <AnimatePresence>
           {!collapsed && (
             <motion.h1
