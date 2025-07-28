@@ -240,3 +240,4 @@ useEffect(() => {
         </div>
     );
 };
+export default TurtlePage;

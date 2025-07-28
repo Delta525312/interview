@@ -2,23 +2,21 @@
 import React, { CSSProperties } from 'react';
 import { 
   Code, 
-  // Database, 
   Mail, 
   Phone, 
-  // Sun, 
-  // Moon, 
-  // Languages,
   ExternalLink,
   CheckCircle,
   Star,
   Users,
-  // Zap,
   Shield,
   BarChart3,
   TreePine,
-  Link2 as LinkIcon,
-  Activity,
-  GitBranch
+  Link2,
+  Network,
+  UserCog,
+  Turtle,
+  Squirrel,
+  GitBranch,
 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
@@ -182,7 +180,7 @@ const Hero: React.FC<{ t: (key: string) => string }> = ({ t }) => {
           <div style={badgeStyle}>
             <BarChart3 size={20} color="#3b82f6" />
             <span style={{ color: colors.text }}>
-              AAA+ {t('home.codeQuality')}
+              AAA+ {t('home.codeQuality')} 
             </span>
           </div>
         </div>
@@ -410,7 +408,7 @@ const Projects: React.FC<{ t: (key: string) => string }> = ({ t }) => {
     {
       title: t('home.turtleProblem'),
       description: t('home.turtleDesc'),
-      icon: Activity,
+      icon: Turtle,
       color: '#10b981',
       features: [
         'Zig-zag matrix traversal',
@@ -423,7 +421,7 @@ const Projects: React.FC<{ t: (key: string) => string }> = ({ t }) => {
     {
       title: t('home.squirrelProblem'),
       description: t('home.squirrelDesc'),
-      icon: TreePine,
+      icon: Squirrel,
       color: '#f59e0b',
       features: [
         'Tree data structure parsing',
@@ -436,7 +434,7 @@ const Projects: React.FC<{ t: (key: string) => string }> = ({ t }) => {
     {
       title: t('home.urlShortener'),
       description: t('home.urlDesc'),
-      icon: LinkIcon,
+      icon: Link2,
       color: '#3b82f6',
       features: [
         'URL shortening service',
@@ -449,7 +447,7 @@ const Projects: React.FC<{ t: (key: string) => string }> = ({ t }) => {
     {
       title: t('home.rateLimit'),
       description: t('home.rateLimitDesc'),
-      icon: Shield,
+      icon: Network,
       color: '#8b5cf6',
       features: [
         'Microservices architecture',
@@ -462,7 +460,7 @@ const Projects: React.FC<{ t: (key: string) => string }> = ({ t }) => {
     {
       title: t('home.fullStack'),
       description: t('home.fullStackDesc'),
-      icon: Users,
+      icon: UserCog,
       color: '#ef4444',
       features: [
         'REST API development',
