@@ -2,6 +2,8 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
+
+//เวลาเปลี่ยนหน้าจะเลื่อนขึ้นไปด้านบนสุด
 export const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
 

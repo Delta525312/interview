@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getStyles } from '../../styles/Solution3/styles';
 import { type ShortenedURL, type ManagedURL, type AuditLog} from '../../components/solution3/types';
-import { Link, Copy, Zap, Shield, Globe, Sparkles, CheckCircle, AlertCircle, TrendingUp, Clock, ExternalLink, Edit, Trash2, BookOpen, Save, XCircle, Search } from 'lucide-react';
+import { Link, Copy, Zap, Shield, Globe, Sparkles, CheckCircle, AlertCircle, TrendingUp, Clock, ExternalLink, Edit, Trash2, BookOpen,  XCircle, Search } from 'lucide-react';
 import { Rnd } from 'react-rnd';
 import Swal from 'sweetalert2';
 import { useTheme } from '../../contexts/ThemeContext'; 

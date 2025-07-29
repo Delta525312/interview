@@ -3,6 +3,8 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+
+//หน้าสำหรับ 404 Not Found
 export const NotFound: React.FC = () => {
   const { themeMode } = useTheme();
   const { t } = useTranslation();

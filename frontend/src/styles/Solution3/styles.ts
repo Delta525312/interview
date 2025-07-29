@@ -1,4 +1,3 @@
-import React from 'react';
 
 // Define the structure for our theme palettes
 interface Palette {

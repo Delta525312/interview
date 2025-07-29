@@ -318,7 +318,7 @@
       "maxDepth": "Tree depth must not exceed 5 levels (root counts as level 1)",
       "idRule": "Each node ID must be an English letter A-Z (root cannot be A)",
       "capacityRule": "Each node's capacity must be between 1 and 5",
-      "walnutRule": "Total walnuts must not exceed nodeCount x 5",
+      "walnutRule": "Total walnuts must not exceed nodeCount x capacity per hole",
       "legacyInput": "Raw structure format: walnutCount,capacity,structure e.g. 25,3,ABEG)H)))",
       "note": "Note: Simulation cannot start if the input is invalid",
       "close": "Close Guide",

@@ -177,14 +177,14 @@ const ControlsPanel: React.FC<ControlsPanelProps> = ({ onUpdateInput, onStartPau
         return <><Pause size={18} /> {t('squirrel.controls.pause')}</>;
     };
 
-    // Node count
-    const countNodes = (n: TreeNode): number => 1 + n.children.reduce((acc, c) => acc + countNodes(c), 0);
-    const nodeCount = builderTree ? countNodes(builderTree) : 0;
-    // ห้ามกรอก walnut > nodeCount*5
+    // รวม capacity ทุก node
+    const sumNodeCapacity = (n: TreeNode): number => n.capacity + n.children.reduce((acc, c) => acc + sumNodeCapacity(c), 0);
+    const totalCapacity = builderTree ? sumNodeCapacity(builderTree) : 0;
+    // ห้ามกรอก walnut > totalCapacity
     const handleWalnutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (locked) return;
         const val = Math.max(0, parseInt(e.target.value) || 0);
-        if (val > nodeCount * 5) return;
+        if (val > totalCapacity) return;
         setWalnuts(val);
     };
     // ห้าม capacity > 5
@@ -346,7 +346,32 @@ const helpContent = (
 interface ActivityLogProps { logs: LogEntry[]; onClear: () => void; t: Function; }
 const ActivityLog: React.FC<ActivityLogProps> = ({ logs, onClear, t }) => (
     <div className="panel log-panel">
-        <div className="log-header"><h3 className="section-header" style={{ borderBottom: 'none', marginBottom: 0 }}><FileText size={16} /> {t('squirrel.log.title')}</h3><button className="clear-button" onClick={onClear}>{t('squirrel.log.clear')}</button></div>
+        <div className="log-header">
+          <h3 className="section-header" style={{ borderBottom: 'none', marginBottom: 0 }}>
+            <FileText size={16} /> {t('squirrel.log.title')}
+          </h3>
+          <button
+  className="clear-button"
+  onClick={onClear}
+  style={{
+    background: 'linear-gradient(90deg, #a78bfa 0%, #c084fc 100%)',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 8,
+    padding: '6px 16px',
+    fontWeight: 500,
+    fontSize: 14,
+    cursor: 'pointer',
+    boxShadow: '0 2px 8px rgba(139, 92, 246, 0.25)',
+    transition: 'background 0.2s',
+    marginLeft: 12,
+  }}
+  onMouseOver={e => (e.currentTarget.style.background = 'linear-gradient(90deg, #8b5cf6 0%, #a855f7 100%)')}
+  onMouseOut={e => (e.currentTarget.style.background = 'linear-gradient(90deg, #a78bfa 0%, #c084fc 100%)')}
+>
+  {t('squirrel.log.clear')}
+</button>
+        </div>
         <div className="log-content">{logs.map((log, i) => <div key={i} className={`log-entry ${log.type}`}><strong>{log.timestamp}</strong>: {log.message}</div>)}</div>
     </div>
 );
