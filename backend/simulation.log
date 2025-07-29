@@ -43,3 +43,16 @@
 2025-07-28 19:34:09,720 - INFO - 172.18.0.1:58776 - "GET /api/v1/user/?q=&start=0&limit=10 HTTP/1.1" 200
 2025-07-28 19:34:17,254 - INFO - 172.18.0.1:38150 - "GET /api/v1/user/?q=&start=0&limit=10 HTTP/1.1" 200
 2025-07-28 19:34:17,284 - INFO - 172.18.0.1:38150 - "GET /api/v1/user/?q=&start=0&limit=10 HTTP/1.1" 200
+2025-07-28 19:43:10,709 - INFO - 172.18.0.1:42560 - "GET /api/v1/user/?q=rock&start=0&limit=10 HTTP/1.1" 200
+2025-07-28 19:43:17,719 - INFO - 172.18.0.1:59858 - "GET /api/v1/user/?q=rock&start=0&limit=1 HTTP/1.1" 200
+2025-07-28 19:43:19,414 - INFO - 172.18.0.1:59858 - "GET /api/v1/user/?q=rock&start=0&limit=1 HTTP/1.1" 200
+2025-07-28 19:43:19,420 - INFO - 172.18.0.1:59862 - "GET /api/v1/user/?q=&start=0&limit=1 HTTP/1.1" 200
+2025-07-28 19:43:21,624 - INFO - 172.18.0.1:59862 - "GET /api/v1/user/?q=&start=0&limit=5 HTTP/1.1" 200
+2025-07-28 19:43:23,381 - INFO - 172.18.0.1:59862 - "GET /api/v1/user/?q=&start=0&limit=1 HTTP/1.1" 200
+2025-07-28 19:43:26,295 - INFO - 172.18.0.1:59862 - "GET /api/v1/user/?q=&start=1&limit=1 HTTP/1.1" 200
+2025-07-28 19:43:26,681 - INFO - 172.18.0.1:59862 - "GET /api/v1/user/?q=&start=2&limit=1 HTTP/1.1" 200
+2025-07-28 19:43:26,841 - INFO - 172.18.0.1:59862 - "GET /api/v1/user/?q=&start=3&limit=1 HTTP/1.1" 200
+2025-07-28 19:43:27,020 - INFO - 172.18.0.1:59862 - "GET /api/v1/user/?q=&start=4&limit=1 HTTP/1.1" 200
+2025-07-28 19:43:27,216 - INFO - 172.18.0.1:59862 - "GET /api/v1/user/?q=&start=5&limit=1 HTTP/1.1" 200
+2025-07-28 19:43:27,367 - INFO - 172.18.0.1:59862 - "GET /api/v1/user/?q=&start=6&limit=1 HTTP/1.1" 200
+2025-07-28 19:43:27,529 - INFO - 172.18.0.1:59862 - "GET /api/v1/user/?q=&start=7&limit=1 HTTP/1.1" 200
