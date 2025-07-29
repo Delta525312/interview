@@ -21,11 +21,13 @@ import {
   EmptyState, LoadingState
 } from '../../styles/Solution5/styles';
 
+
 export const Solution5: React.FC = () => {
   const { t } = useTranslation();
   const { themeMode } = useTheme();
 
   const [users, setUsers] = useState<User[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]); // keep all users for frontend filtering
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchInput, setSearchInput] = useState('');
@@ -44,6 +46,25 @@ export const Solution5: React.FC = () => {
 
   const baseUrl = process.env.REACT_APP_API_URL || 'https://api.example.com';
 
+  // Fetch all users for frontend filtering
+  const fetchAllUsers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${baseUrl}/api/v1/user/?q=&start=0&limit=1000`);
+      const data = await response.json();
+      let all = [];
+      if (Array.isArray(data.data)) all = data.data;
+      else if (Array.isArray(data.items)) all = data.items;
+      else if (Array.isArray(data)) all = data;
+      setAllUsers(all);
+    } catch (error) {
+      setAllUsers([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [baseUrl]);
+
+  // Fetch paginated users (for backend search)
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
@@ -52,34 +73,49 @@ export const Solution5: React.FC = () => {
         `${baseUrl}/api/v1/user/?q=${searchQuery}&start=${start}&limit=${rowsPerPage}`
       );
       const data = await response.json();
+      let pageUsers = [];
+      let total = 1;
       if (Array.isArray(data.data) && typeof data.total_pages === 'number') {
-        setUsers(data.data);
-        setTotalPages(data.total_pages);
+        pageUsers = data.data;
+        total = data.total_pages;
       } else if (Array.isArray(data.items) && typeof data.total === 'number') {
-        setUsers(data.items);
-        setTotalPages(Math.ceil(data.total / rowsPerPage));
+        pageUsers = data.items;
+        total = Math.ceil(data.total / rowsPerPage);
       } else if (Array.isArray(data)) {
-        setUsers(data);
-        setTotalPages(1);
-      } else {
-        setUsers([]);
-        setTotalPages(1);
+        pageUsers = data;
+        total = 1;
       }
+      setUsers(pageUsers);
+      setTotalPages(total);
     } catch (error) {
-      Swal.fire({ icon: 'error', title: t('error'), text: t('fetchError') });
+      setUsers([]);
+      setTotalPages(1);
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, currentPage, rowsPerPage, t, baseUrl]);
+  }, [searchQuery, currentPage, rowsPerPage, baseUrl]);
 
+  // Initial load: fetch all users for filtering, and paginated users for display
   useEffect(() => {
+    fetchAllUsers();
     fetchUsers();
-  }, [fetchUsers]);
+  }, [fetchAllUsers, fetchUsers]);
+
+  // Filter users by department and role (frontend)
+  useEffect(() => {
+    let filtered = allUsers;
+    if (department) filtered = filtered.filter(u => u.department === department);
+    if (role) filtered = filtered.filter(u => u.role === role);
+    setUsers(filtered);
+    setTotalPages(Math.max(1, Math.ceil(filtered.length / rowsPerPage)));
+    setCurrentPage(1);
+  }, [department, role, allUsers, rowsPerPage]);
 
   const handleSearch = (e: React.FormEvent | React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault?.();
     setSearchQuery(searchInput);
     setCurrentPage(1);
+    fetchUsers();
   };
 
   const handleRowsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -139,6 +175,7 @@ export const Solution5: React.FC = () => {
         const response = await fetch(`${baseUrl}/api/v1/user/${user.id}`, { method: 'DELETE' });
         if (response.ok) {
           Swal.fire(t('deleted'), t('deleteSuccess'), 'success');
+          fetchAllUsers();
           fetchUsers();
         } else {
           throw new Error('Delete failed');
@@ -148,7 +185,7 @@ export const Solution5: React.FC = () => {
       }
     }
   };
-  
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setSelectedFile(e.target.files[0]);
@@ -160,11 +197,11 @@ export const Solution5: React.FC = () => {
     setSelectedFile(null);
     setFormData({ ...formData, avatar_url: undefined });
   };
-  
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  
+
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -203,6 +240,7 @@ export const Solution5: React.FC = () => {
       if (response.ok) {
         Swal.fire({ icon: 'success', title: 'Success', text: modalMode === 'create' ? 'Create success' : 'Update success' });
         setShowModal(false);
+        fetchAllUsers();
         fetchUsers();
       } else {
         const error = await response.json();
@@ -222,17 +260,20 @@ export const Solution5: React.FC = () => {
     return d.toLocaleDateString('en-GB'); // dd/mm/yyyy format
   };
 
+  // Paginate filtered users
+  const paginatedUsers = users.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+
   const renderContent = () => {
     if (loading) return <LoadingState>{t('userpage.loading')}</LoadingState>;
     if (users.length === 0) return <EmptyState>{t('userpage.noData')}</EmptyState>;
     
     switch (viewMode) {
       case 'table':
-        return <TableView><UserTable users={users} handleView={handleView} handleEdit={handleEdit} handleDelete={handleDelete} t={t} /></TableView>;
+        return <TableView><UserTable users={paginatedUsers} handleView={handleView} handleEdit={handleEdit} handleDelete={handleDelete} t={t} /></TableView>;
       case 'card':
-        return <CardGrid><UserCardGrid users={users} handleView={handleView} handleEdit={handleEdit} handleDelete={handleDelete} getUserImage={getUserImage} formatDate={formatDate} t={t} /></CardGrid>;
+        return <CardGrid><UserCardGrid users={paginatedUsers} handleView={handleView} handleEdit={handleEdit} handleDelete={handleDelete} getUserImage={getUserImage} formatDate={formatDate} t={t} /></CardGrid>;
       case 'list':
-        return <ListView><UserList users={users} handleView={handleView} handleEdit={handleEdit} handleDelete={handleDelete} getUserImage={getUserImage} formatDate={formatDate} t={t} /></ListView>;
+        return <ListView><UserList users={paginatedUsers} handleView={handleView} handleEdit={handleEdit} handleDelete={handleDelete} getUserImage={getUserImage} formatDate={formatDate} t={t} /></ListView>;
       default:
         return null;
     }
@@ -241,7 +282,28 @@ export const Solution5: React.FC = () => {
   return (
     <Container data-theme={themeMode}>
       <Header>
-        <Title>{t('userpage.userManagement')}</Title>
+       <>
+  <style>{`
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  `}</style>
+  <Title style={{
+    background: 'linear-gradient(90deg, #7c3aed, #8b5cf6, #6366f1, #3b82f6, #7c3aed)',
+    backgroundSize: '200% 100%',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    fontSize: '2.5rem',
+    fontWeight: 800,
+    letterSpacing: '-0.025em',
+    animation: 'gradientShift 5s ease infinite',
+  }}>
+    {t('userpage.userManagement')}
+  </Title>
+</>
         <UserControls
           searchQuery={searchQuery}
           handleSearch={handleSearch}

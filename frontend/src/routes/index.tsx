@@ -8,8 +8,8 @@ import { URLshortenPage } from 'pages/Solution3/URLshortenPage';
 import { Ratelimit} from 'pages/Solution4/Ratelimit';
 import { Solution5 } from 'pages/Solution5/Solution5';
 import { NotFound } from 'pages/NotFound';
-import { ScrollToTop } from 'components/common/ScrollToTop';
-import { ErrorBoundary } from 'components/common/ErrorBoundary';
+import { ScrollToTop } from 'components/common/loading/ScrollToTop';
+import { ErrorBoundary } from 'components/common/ErrorBoundary/ErrorBoundary';
 export const AppRoutes: React.FC = () => {
   return (
     <BrowserRouter>

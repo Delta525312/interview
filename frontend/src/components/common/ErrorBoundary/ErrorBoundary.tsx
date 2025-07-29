@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../../contexts/ThemeContext';
 import { withTranslation, WithTranslation } from 'react-i18next';
 
 const ErrorFallback = ({ isDark, t }: { isDark: boolean; t: any }) => {

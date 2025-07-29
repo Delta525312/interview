@@ -422,14 +422,14 @@ export const UserModal: React.FC<UserModalProps> = ({
               >
                 {t('userpage.cancel')}
               </CancelButton>
-              {modalMode === 'create' && (
+              {(modalMode === 'create' || modalMode === 'edit') && (
                 <SubmitButton
                   type="submit"
                   onClick={handleSubmit}
                   className="modal-action-btn submit"
                   style={{ backgroundColor: '#8b5cf6', minHeight: 36, padding: '8px 20px' }}
                 >
-                  {t('userpage.create')}
+                  {modalMode === 'create' ? t('userpage.create') : t('userpage.update')}
                 </SubmitButton>
               )}
             </ButtonGroup>
